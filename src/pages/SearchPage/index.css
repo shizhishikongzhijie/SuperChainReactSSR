@@ -1,0 +1,54 @@
+/* Search.css */
+.SearchContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.SearchForm {
+    width: 90%;
+    max-width: 400px;
+    display: flex;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.SearchInput {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+}
+
+.SearchButton {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.SearchButton:hover {
+    background-color: #0056b3;
+}
+.ant-select{
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    border-radius: 20px;
+    overflow: hidden;
+}
+.ant-select-outlined{
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    border-radius: 20px;
+    overflow: hidden;
+}
+.ant-select-selector{
+    display: flex !important;
+    border-radius: 20px !important;
+}

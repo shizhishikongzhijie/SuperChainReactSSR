@@ -1,0 +1,88 @@
+/* vote.css */
+.Vote {
+    font-family: 'Arial', sans-serif;
+    margin: 1rem;
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.vote-navigation {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 1rem;
+}
+
+.vote-navigation button {
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    font-size: 0.9rem;
+    /* Smaller font size for mobile */
+}
+
+.vote-navigation button:hover,
+.vote-navigation button.active {
+    background-color: #007bff;
+}
+
+.vote-content {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    /* Adjust font size for mobile */
+}
+
+/* Table styles */
+/* .vote-content table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.vote-content th,
+.vote-content td {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    word-wrap: break-word;
+}
+
+.vote-content th {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+}
+
+.btn-default {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.client-status span {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+
+    .vote-navigation button {
+        padding: 0.4rem 0.8rem;
+    }
+}
+
+.vote-title ,vote-id {
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+} */

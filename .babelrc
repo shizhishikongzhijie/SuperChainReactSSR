@@ -1,0 +1,14 @@
+{
+    // 预设配置数组，用于指定Babel应使用的预设
+    "presets": [
+        // 使用@babel/preset-env预设，以便于编写符合ES6+标准的代码，同时保证向后兼容
+        "@babel/preset-env",
+        // 使用@babel/preset-react预设，用于转换React特有的JSX语法，使之能在不支持该语法的环境中运行
+        "@babel/preset-react"
+    ],
+    // 插件配置数组，目前未指定任何插件
+    "plugins": [
+    ],
+    // 禁止Babel输出紧凑的代码，设置为false后将生成更易读的代码格式，便于调试
+    "compact": false
+}
