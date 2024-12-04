@@ -1,20 +1,20 @@
 const path = require('path');
-
+const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackBar = require('webpackbar');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TranspilePlugin = require('transpile-webpack-plugin');
 const IS_PROD = process.env.NODE_ENV;
-const webpack = require('webpack');  // 确保导入了 webpack,否则不能进行热更新
-const WriteFilePlugin = require('write-file-webpack-plugin');//将文件写入磁盘
+// const webpack = require('webpack');  // 确保导入了 webpack,否则不能进行热更新
+// const WriteFilePlugin = require('write-file-webpack-plugin');//将文件写入磁盘
 const config = {
     // Start mode / environment
     mode: IS_PROD ? 'production' : 'development',
 
     // Entry files
     entry: [
-        'webpack-hot-middleware/client?reload=true', // 启用热加载
+        // 'webpack-hot-middleware/client?reload=true', // 启用热加载
         path.resolve(__dirname, 'src/index'),
     ],
 
@@ -29,13 +29,29 @@ const config = {
         extensions: ['.js', '.jsx', '.ts', '.tsx', '.json', '.scss'],
     },
 
+    cache: {
+        type: 'filesystem',//开启持久缓存
+        buildDependencies: {
+            config: [path.join(__dirname, 'webpack.config.js')],
+        },
+    },
+
     // Module/Loaders configuration
     module: {
         rules: [
             {
                 test: /\.(js|jsx|ts|tsx)$/,
-                exclude: /node_modules/,
-                use: 'babel-loader',
+                // exclude: /node_modules/,
+                exclude: [
+                    /node_modules/,
+                    /server/,
+                    /dist/
+                ],
+                // use: 'babel-loader',
+                use: [
+                    'thread-loader', // 并行处理
+                    'babel-loader'
+                ]
             },
             {
                 test: /\.css$/,
@@ -84,8 +100,20 @@ const config = {
         new MiniCssExtractPlugin({
             filename: 'styles-[chunkhash:8].css',
         }),
-        new webpack.HotModuleReplacementPlugin(), // HMR 插件
-        new WriteFilePlugin()//将文件写入磁盘
+        // new ReplaceInFileWebpackPlugin([
+        //     {
+        //         dir: path.resolve(__dirname, 'dist'),
+        //         test: /\.js$/,
+        //         rules: [
+        //             {
+        //                 search: 'http://localhost:8080',
+        //                 replace: 'http://www.kongzhijie.cn:8080'
+        //             }
+        //         ]
+        //     }
+        // ]),
+        // new webpack.HotModuleReplacementPlugin(), // HMR 插件 部署项目出现__webpack_hmr,所以需要注释
+        // new WriteFilePlugin()//将文件写入磁盘
     ],
 
     // Webpack chunks optimization
@@ -113,7 +141,7 @@ const config = {
 
     // DevServer for development
     devServer: {
-        port: 9000,
+        port: 8000,
         historyApiFallback: true,
     },
     // Generate source map

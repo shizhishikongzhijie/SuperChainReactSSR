@@ -12,6 +12,7 @@ import { LoginOut } from "../../components/Login/Login"
 import { useSelector,useDispatch } from 'react-redux'
 import { deleteAuthToken, setAuthToken } from '../../rouder/userSlice'
 import  CustomMessage  from '../CustomMessage/CustomMessage';
+import { useEffect } from 'react';
 const CustomProLayout = (props) => {
     const dispatch = useDispatch();
     const [MessageSuccess,setMessageSuccess] = useState('');
@@ -22,6 +23,62 @@ const CustomProLayout = (props) => {
         "contentWidth": "Fluid",
         "fixedHeader": true
     });
+    let [userItem,setUserItem] = useState([
+        {
+            key: 'login',
+            href: '/login',
+            icon: <LogoutOutlined />,
+            label: '登录',
+            onClick: () => {
+                window.location.href = '/login'
+            }
+        }
+    ])
+    useEffect(()=>{
+        if(window.localStorage.getItem('token')){
+            setUserItem([
+                {
+                    key: 'center',
+                    href: '/user',
+                    icon: <UserOutlined />,
+                    label: '个人中心',
+                    onClick: () => {
+                        window.location.href = '/user'
+                    }
+                },
+                {
+                    key: 'settings',
+                    href: '/settings',
+                    icon: <SettingOutlined />,
+                    label: '个人设置',
+                    onClick: () => {
+                        window.location.href = '/settings'
+                    }
+                },
+                {
+                    key: 'change-password',
+                    icon: <EditOutlined />,
+                    label: "修改密码",
+                },
+                {
+                    type: 'divider',
+                },
+                {
+                    key: 'logout',
+                    href: '/logout',
+                    icon: <LogoutOutlined />,
+                    label: '退出登录',
+                    onClick: () => {
+                        setMessageSuccess(<LoginOut />)
+                        //转到登录页面
+                        window.location.href = '/login'
+                        // dispatch(deleteAuthToken())
+                    }
+                },
+
+            ]);
+        }
+    },[])
     const [pathname, setPathname] = useState('/');
     return (
         <div
@@ -125,47 +182,7 @@ const CustomProLayout = (props) => {
                         return (
                             <Dropdown
                                 menu={{
-                                    items: [
-                                        {
-                                            key: 'center',
-                                            href: '/user',
-                                            icon: <UserOutlined />,
-                                            label: '个人中心',
-                                            onClick: () => {
-                                                window.location.href = '/user'
-                                            }
-                                        },
-                                        {
-                                            key: 'settings',
-                                            href: '/settings',
-                                            icon: <SettingOutlined />,
-                                            label: '个人设置',
-                                            onClick: () => {
-                                                window.location.href = '/settings'
-                                            }
-                                        },
-                                        {
-                                            key: 'change-password',
-                                            icon: <EditOutlined />,
-                                            label: "修改密码",
-                                        },
-                                        {
-                                            type: 'divider',
-                                        },
-                                        {
-                                            key: 'logout',
-                                            href: '/logout',
-                                            icon: <LogoutOutlined />,
-                                            label: '退出登录',
-                                            onClick: () => {
-                                                setMessageSuccess(<LoginOut />)
-                                                //转到登录页面
-                                                window.location.href = '/login'
-                                                // dispatch(deleteAuthToken())
-                                            }
-                                        },
-
-                                    ],
+                                    items: userItem
                                 }}
                             >
                                 {dom}
