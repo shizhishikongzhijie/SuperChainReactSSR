@@ -5,12 +5,13 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackBar = require('webpackbar');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TranspilePlugin = require('transpile-webpack-plugin');
-const IS_PROD = process.env.NODE_ENV;
+require('dotenv').config(); // 加载 .env 文件
+const NODE_ENV = process.env.NODE_ENV;
 // const webpack = require('webpack');  // 确保导入了 webpack,否则不能进行热更新
 // const WriteFilePlugin = require('write-file-webpack-plugin');//将文件写入磁盘
 const config = {
     // Start mode / environment
-    mode: IS_PROD ? 'production' : 'development',
+    mode: NODE_ENV,
 
     // Entry files
     entry: [
@@ -95,23 +96,23 @@ const config = {
         new HtmlWebpackPlugin({
             filename: 'index.html',
             template: path.resolve(__dirname, 'public/index.html'),
-            minify: IS_PROD,
+            minify: NODE_ENV==='production',
         }),
         new MiniCssExtractPlugin({
             filename: 'styles-[chunkhash:8].css',
         }),
-        // new ReplaceInFileWebpackPlugin([
-        //     {
-        //         dir: path.resolve(__dirname, 'dist'),
-        //         test: /\.js$/,
-        //         rules: [
-        //             {
-        //                 search: 'http://localhost:8080',
-        //                 replace: 'http://www.kongzhijie.cn:8080'
-        //             }
-        //         ]
-        //     }
-        // ]),
+        NODE_ENV==='production' && new ReplaceInFileWebpackPlugin([
+            {
+                dir: path.resolve(__dirname, 'dist'),
+                test: /\.js$/,
+                rules: [
+                    {
+                        search: 'http://localhost:8080',
+                        replace: 'http://www.kongzhijie.cn:8080'
+                    }
+                ]
+            }
+        ]),
         // new webpack.HotModuleReplacementPlugin(), // HMR 插件 部署项目出现__webpack_hmr,所以需要注释
         // new WriteFilePlugin()//将文件写入磁盘
     ],
@@ -141,7 +142,7 @@ const config = {
 
     // DevServer for development
     devServer: {
-        port: 8000,
+        port: process.env.NODE_PORT,
         historyApiFallback: true,
     },
     // Generate source map

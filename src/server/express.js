@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
-
+require('dotenv').config(); // 加载 .env 文件
 //---------webpack------
 //const webpack = require('webpack');
 // const webpackConfig = require('../../webpack.config.js');
@@ -117,6 +117,6 @@ app.use(limiter, (req, res) => {
 
 
 // run express server on port 8000
-app.listen(8000, () => {
-    console.log('Express server started at http://localhost:8000');
+app.listen(process.env.NODE_PORT, () => {
+    console.log('Express server started at http://localhost:'+process.env.NODE_PORT);
 });

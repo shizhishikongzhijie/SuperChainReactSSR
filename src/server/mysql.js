@@ -1,13 +1,32 @@
 const mysql = require("mysql");
-const pool = mysql.createPool({
-    host: "127.0.0.1",
-    port: 3306,
-    database: "xchain",
-    user: "root",
-    password: "3473901836",
-    connectionLimit: 20,
-    multipleStatements: true
-});
+require('dotenv').config(); // 加载 .env 文件
+const NODE_ENV = process.env.NODE_ENV;
+
+//默认开发环境
+let poolData = {
+    host: process.env.DB_DEV_HOST,
+    port: process.env.DB_DEV_PORT,
+    database: process.env.DB_DEV_DATABASE,
+    user: process.env.DB_DEV_USER,
+    password: process.env.DB_DEV_PASS,
+    connectionLimit: process.env.DB_DEV_CONNECTION_LIMIT,
+    multipleStatements: process.env.DB_DEV_MULTIPLE_STATEMENTS
+}
+if (NODE_ENV === 'production') {
+    console.log('生产环境');
+    poolData = {
+        host: process.env.DB_PROD_HOST,
+        port: process.env.DB_PROD_PORT,
+        database: process.env.DB_PROD_DATABASE,
+        user: process.env.DB_PROD_USER,
+        password: process.env.DB_PROD_PASS,
+        connectionLimit: process.env.DB_PROD_CONNECTION_LIMIT,
+        multipleStatements: process.env.DB_PROD_MULTIPLE_STATEMENTS
+    }
+}
+const pool = mysql.createPool(
+    poolData
+);
 
 /**
  * 执行SQL语句，并通过回调函数处理结果或错误。
@@ -36,4 +55,4 @@ const sqlRes = (sql, params, callback) => {
     });
 };
 
-module.exports = {pool, sqlRes};
+module.exports = { pool, sqlRes };

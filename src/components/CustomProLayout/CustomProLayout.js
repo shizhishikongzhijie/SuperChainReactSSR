@@ -1,21 +1,30 @@
 import { UserOutlined } from '@ant-design/icons';
-import { SearchOutlined, LogoutOutlined, InfoCircleFilled, EditOutlined, QuestionCircleFilled, GithubFilled, SettingOutlined } from '@ant-design/icons';
+import {
+    SearchOutlined,
+    LoginOutlined,
+    LogoutOutlined,
+    InfoCircleFilled,
+    EditOutlined,
+    QuestionCircleFilled,
+    GithubFilled,
+    SettingOutlined
+} from '@ant-design/icons';
 import { Input, Tag, Dropdown } from 'antd';
 import {
     PageContainer,
     ProLayout,
     DefaultFooter
 } from '@ant-design/pro-components';
-import React,{ useState } from 'react';
+import React, { useState } from 'react';
 import defaultProps from './_defaultProps';
 import { LoginOut } from "../../components/Login/Login"
-import { useSelector,useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { deleteAuthToken, setAuthToken } from '../../rouder/userSlice'
-import  CustomMessage  from '../CustomMessage/CustomMessage';
+import CustomMessage from '../CustomMessage/CustomMessage';
 import { useEffect } from 'react';
 const CustomProLayout = (props) => {
     const dispatch = useDispatch();
-    const [MessageSuccess,setMessageSuccess] = useState('');
+    const [MessageSuccess, setMessageSuccess] = useState('');
     const [settings, setSetting] = useState({
         fixSiderbar: true,
         layout: "top",
@@ -23,19 +32,19 @@ const CustomProLayout = (props) => {
         "contentWidth": "Fluid",
         "fixedHeader": true
     });
-    let [userItem,setUserItem] = useState([
+    let [userItem, setUserItem] = useState([
         {
             key: 'login',
             href: '/login',
-            icon: <LogoutOutlined />,
+            icon: <LoginOutlined />,
             label: '登录',
             onClick: () => {
                 window.location.href = '/login'
             }
         }
     ])
-    useEffect(()=>{
-        if(window.localStorage.getItem('token')){
+    useEffect(() => {
+        if (window.localStorage.getItem('token')) {
             setUserItem([
                 {
                     key: 'center',
@@ -71,14 +80,18 @@ const CustomProLayout = (props) => {
                     onClick: () => {
                         setMessageSuccess(<LoginOut />)
                         //转到登录页面
+                        //删除loaclstorage
+                        window.localStorage.removeItem('token');
+                        window.localStorage.removeItem('key');
+                        dispatch(deleteAuthToken())
                         window.location.href = '/login'
-                        // dispatch(deleteAuthToken())
+
                     }
                 },
 
             ]);
         }
-    },[])
+    }, [])
     const [pathname, setPathname] = useState('/');
     return (
         <div
