@@ -4,7 +4,9 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackBar = require('webpackbar');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const TranspilePlugin = require('transpile-webpack-plugin');
+// const TranspilePlugin = require('transpile-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 require('dotenv').config(); // 加载 .env 文件
 const NODE_ENV = process.env.NODE_ENV;
 // const webpack = require('webpack');  // 确保导入了 webpack,否则不能进行热更新
@@ -119,6 +121,13 @@ const config = {
 
     // Webpack chunks optimization
     optimization: {
+        usedExports: true,//静态分析移除未使用代码的技术
+        concatenateModules: true,//Scope Hoisting 是 Webpack 的一项优化技术，它通过重新排序和合并模块来减少打包文件中的函数作用域数量。
+        minimize: true,//压缩代码js,css
+        minimizer: [
+            new TerserPlugin(),
+            new CssMinimizerPlugin(),
+        ],
         splitChunks: {
             cacheGroups: {
                 default: false,
