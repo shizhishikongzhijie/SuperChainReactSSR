@@ -1,7 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
+
 require('dotenv').config(); // 加载 .env 文件
+
+process.env.NODE_ENV === 'production' && require('xprofiler').start();//生产模式启动xprofiler开启性能日志输出
+
 //---------webpack------
 //const webpack = require('webpack');
 // const webpackConfig = require('../../webpack.config.js');

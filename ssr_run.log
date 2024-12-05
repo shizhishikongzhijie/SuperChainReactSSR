@@ -5,15 +5,6 @@
 [32m[nodemon] starting `node src/server/index.js`[39m
 >>> ipAddress:  { country: '斯里兰卡', province: '', city: '', isp: '' }
 Express server started at http://localhost:8000
->>> ipv: ::ffff:127.0.0.1
->>> ipAddress: {}
-数据库连接成功
->>> isIpInSqlResult: 
-数据库连接成功
-数据库连接成功
->>> sqlResult: [object Object]
-link_express: GRjJ84ZXB3bba7isLADL+DqGB+kPAnude7bRRccUAoYumg4FlNpvIFx2FYsWtLIC0L62rOB4swxUf1shpWSskfL5wvA7vVx+fqSBtGSArSLRaEEvtDsl9slQbnPHkLBGHoIdENksGzb/c3wnUhbWk2WpGI6AlJBBZUuHvnr0gig=
-decrypted: HJr0ptueRR4sqz5erPCLTTR2QVAtyx7hY/OMc5G2uSQ=
 >>> ipv: ::1
 >>> ipAddress: {}
 数据库连接成功
@@ -21,8 +12,8 @@ decrypted: HJr0ptueRR4sqz5erPCLTTR2QVAtyx7hY/OMc5G2uSQ=
 数据库连接成功
 数据库连接成功
 >>> sqlResult: [object Object]
-link_express: C1R8x6eeKBkyd+JkvGljNVIk0vPZ9fJw/2S9BukQ8DP85MZBpgsbxSyGhcmHeb4RxoIz+BsKA7QVP1J14WmfqmbbHKNT3HIJ+H5X+NqsMEJg59tqM3ALk/X19PLBgmZkug31GsJPbdXS5wUAhMzX/cO1kKQuCH9Nv0syzE5299U=
-decrypted: D5qU2vSYtemeoZq9JzQ/qiwWnFz+7dJQquCRp3tCOB4=
+link_express: S9SYLThna24TgmnyL+fBMoiQVKyeOna80/8NzqQW0xtVILAVHBGi2VFGsmICxNnKT0iPr5K7FXMPiOx9fi/SBXb57lLwj/YFhfV2NH6Ca1C4qZImyG8RNpZBUPsA1Giw49VE2H0cp0+9V2GhoCskIbNnlUdxskiWUa7uoXPsaZQ=
+decrypted: cX8/0T1sPxOC1/B1DAYKSz9p2RfjEawgo6f4WZaEbfg=
 >>> ipv: ::1
 >>> ipAddress: {}
 数据库连接成功
@@ -30,5 +21,5 @@ decrypted: D5qU2vSYtemeoZq9JzQ/qiwWnFz+7dJQquCRp3tCOB4=
 数据库连接成功
 数据库连接成功
 >>> sqlResult: [object Object]
-link_express: TwFzea08+f5QXEK232iDso5dX0R++Jvb1ZNK3eI2X+ujWqZOO0DR8BHGhiVYN8JNNK+Ueeguwk9zUXv//w2CyPJU1bJbImrTUWdPBzV6g2Pzbj5/8GP4hcSXjajHsayNijAC3vmLChxxgcmuqI2FItegU+nfxkyxZbmaxkxovro=
-decrypted: 9DoxNp3SsYe/9q8KVJVz2B/3tw7tMY01BoCB9IRNx/4=
+link_express: QO8DJGwSiiSLhM7oxOGgCkvkojjOet/5+LM4SyQ5DEQ86dLusA+Eife/ceY69zZRk/PbJyqrJG9XFpjGXyFzIxoIj4wstiqyq9W6vJDYc8jWqerQf02OjTEbIQrEPcH+qM7HXGAlauFAR7I/zzfme22UEnL+cJtl7dCK3UjrwWo=
+decrypted: haLKojMrqxaKv9CeJntquCSypm1YYeT/xVCIzKiz02Q=
