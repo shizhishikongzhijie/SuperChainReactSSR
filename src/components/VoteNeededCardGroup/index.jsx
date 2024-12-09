@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import {
     Avatar,
     Card,
@@ -35,7 +35,22 @@ const ListContent = ({ creator, startDate,limitDate, hasVotedCount,uploaderCount
     );
 };
 const VoteNeededCardGroup = ({ dataSource }) => {
-
+    const [dataSources, setDataSources] = useState([]);
+    const [paginationProps,setPaginationProps] = useState({
+        showSizeChanger: true,
+        showQuickJumper: true,
+        pageSize: 5,
+        total: 0,
+    });
+    useEffect(() => {
+        setDataSources(dataSource);
+        setPaginationProps({
+            showSizeChanger: true,
+            showQuickJumper: true,
+            pageSize: 5,
+            total: dataSource!=null?dataSource.length:0,
+        });
+    }, [dataSource]);
     const extraContent = (
         <div>
             <RadioGroup defaultValue="all">
@@ -46,12 +61,6 @@ const VoteNeededCardGroup = ({ dataSource }) => {
             <Search placeholder="请输入" onSearch={() => ({})} />
         </div>
     );
-    const paginationProps = {
-        showSizeChanger: true,
-        showQuickJumper: true,
-        pageSize: 5,
-        total: dataSource.length,
-    };
     return (
         <Card
             bordered={false}
@@ -69,7 +78,7 @@ const VoteNeededCardGroup = ({ dataSource }) => {
                 size="large"
                 rowKey="id"
                 pagination={paginationProps}
-                dataSource={dataSource}
+                dataSource={dataSources}
                 renderItem={(item) => (
                     <List.Item
                         actions={[

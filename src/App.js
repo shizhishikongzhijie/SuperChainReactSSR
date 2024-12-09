@@ -14,15 +14,11 @@ import reportWebVitals from './reportWebVitals';
 import { CustomRouter, RouterBeforeEach } from './components/ProtectedRoute/ProtectedRoute';
 import { generateRSAKeyPair, RSADecrypt } from './util/RSAUtil';
 import { get } from './util/request';
+import io from 'socket.io-client';
 import './App.css';
 const Application=({initialData,isLimit,voteView})=> {
-  // const [collapsed, setCollapsed] = useState(false);
- // 在客户端使用 useLayoutEffect
-  // useLayoutEffect(() => {
-  //   if (typeof window !== 'undefined') {
-  //     setCollapsed(window.location.pathname !== '/');
-  //   }
-  // }, []);
+  
+
   return (
     <HappyProvider>
       <ConfigProvider locale={zhCN}>

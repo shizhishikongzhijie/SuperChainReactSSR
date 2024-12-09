@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
-
+const Redis = require('ioredis');
 require('dotenv').config(); // 加载 .env 文件
 
 process.env.NODE_ENV === 'production' && require('xprofiler').start();//生产模式启动xprofiler开启性能日志输出
@@ -13,6 +13,8 @@ process.env.NODE_ENV === 'production' && require('xprofiler').start();//生产�
 // const webpackHotMiddleware = require('webpack-hot-middleware');
 // const compiler = webpack(webpackConfig);
 //-----------------------
+
+
 const { renderToString } = require('react-dom/server');
 const { generateRSAKeyPair, RSADecrypt, sanitizePublicKey } = require('../util/RSAUtil');
 const { get } = require('../util/request');
@@ -21,6 +23,9 @@ const { Limit } = require('../pages/IpLimitPage/index');
 const LimitPageString = renderToString(<Limit />);
 // create express application
 const app = express();
+
+
+
 const { getClientIp, getLocationFromIp } = require('../util/IpUtil');
 const rateLimit = require("express-rate-limit");//限制请求
 const { pool, sqlRes } = require('./mysql');
@@ -35,20 +40,24 @@ const limiter = rateLimit({
     max: 20,
     message: LimitPage,
 });
+
 // app.use(webpackDevMiddleware(compiler, {
 //     publicPath: webpackConfig.output.path,
 //     stats: { colors: true }
 // }));
 
+// 使用中间件解析请求体
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 // app.use(webpackHotMiddleware(compiler));
 const getInitialData = async () => {
     const { publicKey, privateKey } = generateRSAKeyPair();
     const response = await get('http://localhost:8080/link', { "publicKey": publicKey }).catch(err => {
         console.log("link失败");
     })
-    console.log("link_express: " + response)
+    // console.log("link_express: " + JSON.stringify(response))
     const decrypted = RSADecrypt(response, privateKey);
-    console.log("decrypted: " + decrypted);
+    // console.log("decrypted: " + decrypted);
     const linkId = sanitizePublicKey(publicKey);
     const linkKey = decrypted;
     const data = { linkId, linkKey };
@@ -106,6 +115,41 @@ const appHtml = async (req, res) => {
         .replace(`<script>window.__VOTE_VIEW__ = ''</script>`, `<script>window.__VOTE_VIEW__ = ${JSON.stringify(voteView)}</script>`)
     );
 }
+
+// 创建一个 Redis 客户端实例
+const redisClient = new Redis({
+    host: '121.43.115.41',
+    port: 6379,
+    password: '3473901836teng',
+    db: 1,
+    connectTimeout: 5000,
+    retryStrategy(times) {
+        const delay = Math.min(times * 50, 2000);
+        return delay;
+    },
+});
+// 消息路由处理
+app.post('/message/:publicKey', async (req, res) => {
+    const { publicKey } = req.params;
+    const message = req.body.message;
+
+    if (!message) {
+        return res.status(400).send('Message is required.');
+    }
+
+    try {
+        // 将消息推送到用户的 Redis List
+        await redisClient.rpush(publicKey, JSON.stringify(message));
+
+        // 发布消息更新通知到指定频道
+        await redisClient.publish('message-updates', JSON.stringify({ publicKey }));
+
+        res.send('Message queued and notification sent.');
+    } catch (error) {
+        console.error('Error queuing message:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
 // serve static assets
 app.get(
     /\.(js|css|map|ico)$/,
@@ -122,5 +166,5 @@ app.use(limiter, (req, res) => {
 
 // run express server on port 8000
 app.listen(process.env.NODE_PORT, () => {
-    console.log('Express server started at http://localhost:'+process.env.NODE_PORT);
+    console.log('Express server started at http://localhost:' + process.env.NODE_PORT);
 });

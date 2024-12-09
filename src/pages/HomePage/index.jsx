@@ -13,15 +13,7 @@ function Home() {
             const res = await get(`http://localhost:8080/api/getHomePage`).catch((error) => {
                 console.error("Error fetching home page data:", error);
             });
-            //如果res有code
-            if (res && res.code) {
-                message.error(res.message);
-                //重定向到登录页
-                window.location.href = '/login';
-            } else {
-                return res;
-            }
-
+            return res;
         } else {
             return {};
         }
@@ -30,7 +22,7 @@ function Home() {
     useEffect(() => {
         fetchHomePageDataSource().then(
             (data) => {
-                console.log("data: "+data)
+                console.log("data: " + data)
                 setDataSource(JSON.parse(data));
             }
         );

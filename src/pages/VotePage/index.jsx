@@ -20,6 +20,8 @@ const Info = ({ title, value, bordered }) => {
 function Vote() {
     // 状态：当前选中的部分
     const [activeSection, setActiveSection] = useState('managing');
+    const [managerCountList,setManagerCountList] = useState([0,0,0])
+    const [searchType,setSearchType] = useState('1')//Type:  0:已投 1:未投 2:所有
     // 参考：投票列表详情视图的引用
     const tipsViewRef = useRef(null);
     // 状态：投票列表
@@ -42,9 +44,37 @@ function Vote() {
         })
     }
 
+    function searchVoteByPkType(){
+        const key = JSON.parse(localStorage.getItem('link')).linkKey
+        // 获取投票列表数据
+        get('http://localhost:8080/searchVoteByPkType', { type:AESEncrypt(searchType,key) }).then(res=>{
+            console.log(res)
+            console.log(JSON.parse(res).data)
+            setVoteList(JSON.parse(res).data.voteList)
+        })
+    }
+    function searchManagerCount(){
+        // 获取投票列表数据
+        get('http://localhost:8080/searchManagerCount', {}).then(res=>{
+            console.log(res)
+            console.log(JSON.parse(res).data)
+            setManagerCountList(JSON.parse(res).data.managerCountList);
+        })
+    }
+
     useEffect(() => {
-        searchVoteList()
-    }, [activeSection])
+        searchManagerCount();
+        searchVoteList();
+    }, [])
+
+    useEffect(() => {
+        if(activeSection==='managing'){
+            searchVoteList()
+        }else{
+            searchVoteByPkType()
+        }
+        
+    }, [activeSection,searchType])
 
     // 使用Effect Hook来获取投票列表
     // useEffect(() => {
@@ -81,13 +111,13 @@ function Vote() {
             <Card bordered={false}>
                 <Row>
                     <Col sm={8} xs={24}>
-                        <Info title="我的待办" value="8个任务" bordered />
+                        <Info title="管理中" value={managerCountList[0]+"个任务"} bordered />
                     </Col>
                     <Col sm={8} xs={24}>
-                        <Info title="本周任务平均处理时间" value="32分钟" bordered />
+                        <Info title="已投票" value={managerCountList[1]+"个任务"} bordered />
                     </Col>
                     <Col sm={8} xs={24}>
-                        <Info title="本周完成任务数" value="24个任务" />
+                        <Info title="未投票" value={managerCountList[2]+"个任务"} />
                     </Col>
                 </Row>
             </Card>

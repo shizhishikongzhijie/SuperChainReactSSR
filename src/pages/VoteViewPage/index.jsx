@@ -78,14 +78,7 @@ const VoteView = () => {
         })
         console.log(res);
         //如果res有code
-        if (res && res.code) {
-            message.error(JSON.parse(res.code))
-            message.error(res.message);
-            //重定向到登录页
-            window.location.href = '/login';
-        } else {
             return res;
-        }
     }
     const onFinish = (values) => {
         const key = JSON.parse(localStorage.getItem('link')).linkKey

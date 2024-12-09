@@ -37,14 +37,7 @@ function Search() {
         })
         console.log(res);
         //如果res有code
-        if (res && res.code) {
-            message.error(JSON.parse(res.code))
-            message.error(res.message);
-            //重定向到登录页
-            window.location.href = '/login';
-        } else {
-            return res;
-        }
+        return res;
     }
     useEffect(() => {
         if (searchTerm != "") {

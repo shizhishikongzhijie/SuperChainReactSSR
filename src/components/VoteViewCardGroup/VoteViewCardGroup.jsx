@@ -1,11 +1,11 @@
 import React from 'react';
 import { ProDescriptions, ProCard, ProList } from '@ant-design/pro-components';
-import { Input, Tooltip, Pagination, Button,Progress } from 'antd';
-import { useState } from 'react';
+import { Input, Tooltip, Badge,Pagination, Button, Progress } from 'antd';
+import { useState, useEffect } from 'react';
 import { useRef } from 'react';
 import RcResizeObserver from 'rc-resize-observer';
 import data from '../../testdata/TestData';
-const VoteViewCard = ({dataSourceItem}) => {
+const VoteViewCard = ({ dataSourceItem }) => {
     const actionRef = useRef();
     const [isEditable, setIsEditable] = useState(false);
     return (
@@ -13,13 +13,16 @@ const VoteViewCard = ({dataSourceItem}) => {
             actionRef={actionRef}
             //  bordered
             formProps={{
-                onValuesChange: (e, f) => console.log(f),
+                onValuesChange: (e, f) => {
+                    console.log(e)
+                    console.log(f)
+                },
             }}
             title="可编辑的定义列表"
             request={async () => {
                 return Promise.resolve({
                     success: true,
-                    data: {...dataSourceItem},
+                    data: { ...dataSourceItem },
                 });
             }}
             editable={isEditable}
@@ -86,7 +89,7 @@ const VoteViewCard = ({dataSourceItem}) => {
                     key: 'progress',
                     render: (_, record) => (
                         <Progress
-                            percent={dataSourceItem.hasVotedCount / dataSourceItem.uploaderCount * 100}
+                            percent={(dataSourceItem.hasVotedCount / dataSourceItem.uploaderCount) * 100}
                             status={dataSourceItem.hasVotedCount < dataSourceItem.uploaderCount ? 'active' : 'success'}
                             size="small"
                             style={{
@@ -96,6 +99,11 @@ const VoteViewCard = ({dataSourceItem}) => {
                     ),
                 },
                 {
+                    title: 'privacy',
+                    dataIndex: 'privacy',
+                    dataIndex: 'privacy',
+                },
+                {
                     title: '操作',
                     valueType: 'option',
                     render: () =>
@@ -103,6 +111,7 @@ const VoteViewCard = ({dataSourceItem}) => {
                             <Button rel="noopener noreferrer" key="link"
                                 onClick={() => {
                                     setIsEditable(!isEditable);
+                                    //开始编辑
                                 }}
                             >
                                 {isEditable ? "取消编辑" : "编辑"}
@@ -136,10 +145,13 @@ const VoteViewCard = ({dataSourceItem}) => {
     );
 };
 
-const VoteViewCardGroup = ({dataSource}) => {
+const VoteViewCardGroup = ({ dataSource }) => {
     const [responsive, setResponsive] = useState(false);
-    const [dataSources, setDataSources] = useState(dataSource || []);
+    const [dataSources, setDataSources] = useState([]);
     const [page, setPageNumber] = useState(1);
+    useEffect(() => {
+        setDataSources(dataSource);
+    }, [dataSource]);
     const onChangePagination = (pageNumber) => {
         console.log('Page: ', pageNumber);
     };
@@ -154,14 +166,15 @@ const VoteViewCardGroup = ({dataSource}) => {
         >
             <ProCard.Group ghost direction={responsive ? 'row' : 'column'} style={{ marginTop: '16px' }}>
                 {(dataSources || []).map((item, index) => (
-
-                    <ProCard key={index}
-                        style={{ marginBottom: 24 }}
-                        //bordered
-                        hoverable
-                    >
-                        <VoteViewCard dataSourceItem={item} />
-                    </ProCard>
+                    <Badge.Ribbon text="Hippies" color="purple">
+                        <ProCard key={index}
+                            style={{ marginBottom: 24 }}
+                            //bordered
+                            hoverable
+                        >
+                            <VoteViewCard dataSourceItem={item} />
+                        </ProCard>
+                    </Badge.Ribbon>
                 ))}
 
             </ProCard.Group>

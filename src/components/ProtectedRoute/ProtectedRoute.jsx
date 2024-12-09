@@ -4,6 +4,7 @@ import Loading from '../../components/LoadingProcess/LoadingProcess';
 import { MobileView } from 'react-device-detect';
 import BottomNav from '../../components/BottomNav/BottomNav';
 import CustomFloatButtonGroup from '../../components/FloatButtonGroup/CustomFloatButtonGroup';
+import MessageQueueComponent from "../MessageQueue/MessageQueue";
 import { setLinkData } from '../../rouder/linkSlice';
 import { useSelector, useDispatch } from 'react-redux'
 import { Limit } from '../../pages/IpLimitPage';
@@ -119,6 +120,7 @@ const CustomRouter = () => {
     return (
         <>
             <Suspense fallback={<Loading />}>{useRoutes(Myrouters)}</Suspense>
+            <MessageQueueComponent publicKey={userpublicKey} />
             <MobileView><BottomNav /></MobileView>
             <CustomFloatButtonGroup />
         </>
@@ -126,7 +128,7 @@ const CustomRouter = () => {
 }
 
 const RouterBeforeEach = ({ children, initialData, isLimit,voteView }) => {
-
+    
     const dispatch = useDispatch()
     const location = useLocation();
     const navigator = useNavigate();

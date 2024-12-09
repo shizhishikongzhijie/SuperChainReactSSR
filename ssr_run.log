@@ -12,8 +12,9 @@ Express server started at http://localhost:8000
 数据库连接成功
 数据库连接成功
 >>> sqlResult: [object Object]
-link_express: S9SYLThna24TgmnyL+fBMoiQVKyeOna80/8NzqQW0xtVILAVHBGi2VFGsmICxNnKT0iPr5K7FXMPiOx9fi/SBXb57lLwj/YFhfV2NH6Ca1C4qZImyG8RNpZBUPsA1Giw49VE2H0cp0+9V2GhoCskIbNnlUdxskiWUa7uoXPsaZQ=
-decrypted: cX8/0T1sPxOC1/B1DAYKSz9p2RfjEawgo6f4WZaEbfg=
+link失败
+link_express: undefined
+decrypted: false
 >>> ipv: ::1
 >>> ipAddress: {}
 数据库连接成功
@@ -21,5 +22,33 @@ decrypted: cX8/0T1sPxOC1/B1DAYKSz9p2RfjEawgo6f4WZaEbfg=
 数据库连接成功
 数据库连接成功
 >>> sqlResult: [object Object]
-link_express: QO8DJGwSiiSLhM7oxOGgCkvkojjOet/5+LM4SyQ5DEQ86dLusA+Eife/ceY69zZRk/PbJyqrJG9XFpjGXyFzIxoIj4wstiqyq9W6vJDYc8jWqerQf02OjTEbIQrEPcH+qM7HXGAlauFAR7I/zzfme22UEnL+cJtl7dCK3UjrwWo=
-decrypted: haLKojMrqxaKv9CeJntquCSypm1YYeT/xVCIzKiz02Q=
+link_express: Oi0BCgyxwnjKAYzt6yFBNDfv91F+PG0hDI/4J/IqeZUvjI08CxD9xDfUrn9kC4ZX8PQqszW8iA7J+bVtmKq+hmFHMR0sQ8iTo+8ROifUh9VYBFIKOLpORw62frEdR+rg1gs3FoSJsMnzk+TwSbnYIeBWk2/8eqTVMW1abku75js=
+decrypted: 3JkZmr56wgU21nqlF5cLsakNxxKr3zZgIlN+CpD/Htw=
+>>> ipv: ::1
+>>> ipAddress: {}
+数据库连接成功
+>>> isIpInSqlResult: [object Object]
+数据库连接成功
+数据库连接成功
+>>> sqlResult: [object Object]
+link失败
+link_express: undefined
+decrypted: false
+>>> ipv: ::1
+>>> ipAddress: {}
+数据库连接成功
+>>> isIpInSqlResult: [object Object]
+数据库连接成功
+数据库连接成功
+>>> sqlResult: [object Object]
+link_express: B15nGSzEvOZ5Xyc9lJhs7E8GPvXiseEyIQssv60qFtO6kDvQiqU4/em3agHB9dRo9KA+isujbykw3VA2YinEqFVUxNZ4C1nIlCigcsEl2j8ipxFZFGSYvS22L8GdtW57MhaixW2QGZsuuQlHDNy0nRRlSiHDOMmPnpMWIWZ0lj4=
+decrypted: XWL0hi/8Gz8vcCSZHqU6sWiyd2zxT5uko1TErUG5Fes=
+>>> ipv: ::1
+>>> ipAddress: {}
+数据库连接成功
+>>> isIpInSqlResult: [object Object]
+数据库连接成功
+数据库连接成功
+>>> sqlResult: [object Object]
+link_express: eD/V+2i93929axr/5Nd2FiYDJvkvAFxRkPVEN7K0QMNTDUJ0CvkJzBD+PyR7jbMz7NRLcEuGFgPY8Wdns1IduLuKzRklOyglfXuy83sOo9CWFReoKCM5ZDyUs6DO9W1fz02dAYo4HrcObtzsB3zu6v3vZUw9cmxeQOn/wVndGZY=
+decrypted: 6WsclXQVayHEhDJ7s3KMjI8gb5jlPgFq4OH7keoohPc=

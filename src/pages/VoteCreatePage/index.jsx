@@ -199,10 +199,6 @@ const OptionsItem = () => {
                 window.location.href = '/vote';
             } else if (res.code == 400) {
                 message.error(res.message);
-            } else {
-                message.error(res.message);
-                //重定向到登录页
-                window.location.href = '/login';
             }
         }
     };

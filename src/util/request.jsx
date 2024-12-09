@@ -2,11 +2,13 @@
 
 import axios from 'axios';
 import { AESDecrypt, AESEncrypt } from './AESUtil';
+// import { useLocation, useNavigate } from 'react-router-dom';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { message, Spin } from 'antd';
 //判断是否在浏览器中
-
+// const location = useLocation();
+// const navigate = useNavigate();
 /**
  * 获取认证令牌
  */
@@ -128,8 +130,36 @@ apiClient.interceptors.response.use(
             message.warning('请求超时，请重试')
         }
         // 处理错误响应
-        return error.response.data;
-        // return Promise.reject(error);
+        // console.log(JSON.stringify(error.response.data));
+        // 检查是否有响应数据和状态码
+        if (error.response) {
+            const status = error.response.status;
+
+            // 根据不同的状态码做出反应
+            if (typeof window !== 'undefined' && window.localStorage) {
+
+                switch (status) {
+                    case 401: // 未认证
+                        message.error('未授权，请重新登录');
+                        // 清除可能存在的用户信息
+                        localStorage.removeItem('token'); // 或者其他存储用户信息的地方
+                        // 使用全局导航函数重定向到登录页面
+                        // navigateTo('/login');
+                        // navigate('/login', { replace: true });
+                        window.location.href = '/login';
+                        break;
+                    case 403: // 权限不足
+                        message.error('您没有访问此资源的权限');
+                        break;
+                    default:
+                        console.error('Error:', JSON.stringify(error.response.data));
+                        break;
+                }
+            }
+
+            return error.response.data;
+            // return Promise.reject(error);
+        }
     }
 );
 

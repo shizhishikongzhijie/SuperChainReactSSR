@@ -7,12 +7,18 @@ import {get} from './request'
  * express框架可以直接通过 req.ip 获取
  */
 function getClientIp(req) {
-	return req.headers['x-forwarded-for'] ||
-	req.ip ||
-	req.connection.remoteAddress ||
-	req.socket.remoteAddress ||
-	req.connection.socket.remoteAddress ||
-	'';
+	// return req.headers['x-forwarded-for'] ||
+	// req.ip ||
+	// req.connection.remoteAddress ||
+	// req.socket.remoteAddress ||
+	// req.connection.socket.remoteAddress ||
+	// '';
+	return req?.headers?.['x-forwarded-for'] 
+        || req?.ip 
+        || req?.connection?.remoteAddress 
+        || req?.socket?.remoteAddress 
+        || req?.connection?.socket?.remoteAddress 
+        || '';
 }
 
 // 上述代码是直接获取的IPV4地址，如果获取到的是IPV6，则通过字符串的截取来转换为IPV4地址。
