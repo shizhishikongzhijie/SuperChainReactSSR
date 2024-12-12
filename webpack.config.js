@@ -39,6 +39,11 @@ const config = {
         },
     },
 
+    externals: {
+        './cptable': 'var cptable',
+        '../xlsx.js': 'var _XLSX'
+    },
+
     // Module/Loaders configuration
     module: {
         rules: [
@@ -98,12 +103,12 @@ const config = {
         new HtmlWebpackPlugin({
             filename: 'index.html',
             template: path.resolve(__dirname, 'public/index.html'),
-            minify: NODE_ENV==='production',
+            minify: NODE_ENV === 'production',
         }),
         new MiniCssExtractPlugin({
             filename: 'styles-[chunkhash:8].css',
         }),
-        NODE_ENV==='production' && new ReplaceInFileWebpackPlugin([
+        NODE_ENV === 'production' && new ReplaceInFileWebpackPlugin([
             {
                 dir: path.resolve(__dirname, 'dist'),
                 test: /\.js$/,

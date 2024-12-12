@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setAuthToken } from '../../rouder/userSlice';
 import { AESEncrypt, AESDecrypt } from '../../util/AESUtil';
 import TipsViewWindow from '../../components/TipsViewWindow/TipsViewWindow';
-import downloadTextWithFileSaver from '../../util/fileUtil';
+import {downloadTextWithFileSaver} from '../../util/fileUtil';
 import { formatKey } from '../../util/keyUtil'
 import CustomCountdownButton from '../../components/CustomCountdownButton';
 const { Countdown } = Statistic;

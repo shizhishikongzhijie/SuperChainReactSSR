@@ -10,7 +10,7 @@ export const voteSlice = createSlice({
         description: '',
         startDate: '',
         limitDate: '',
-        publicKeyList: '',
+        publicKeyList: [],
         ECPointList: '',
         question: [],
         isMultiple: '',
@@ -26,6 +26,9 @@ export const voteSlice = createSlice({
             state.startDate = action.payload.startDate;
             state.limitDate = action.payload.limitDate;
         },
+        setVotePKList: (state, action) => {
+            state.publicKeyList = action.payload.publicKeyList;
+        },
         changeQuestionAndIsMultiple: (state, action) => {
             state.question = action.payload.question;
             state.isMultiple = action.payload.isMultiple;
@@ -33,6 +36,6 @@ export const voteSlice = createSlice({
     }
 })
 
-export const { setVote,changeQuestionAndIsMultiple } = voteSlice.actions
+export const { setVote,setVotePKList,changeQuestionAndIsMultiple } = voteSlice.actions
 
 export default voteSlice.reducer

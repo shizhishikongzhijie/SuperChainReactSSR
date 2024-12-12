@@ -62,6 +62,7 @@
     "vm-browserify": "^1.1.2",
     "web-vitals": "^2.1.4",
     "webpackbar": "^6.0.1",
+    "xlsx": "^0.20.2",
     "xtransit": "^2.6.4"
   },
   "scripts": {
@@ -105,6 +106,7 @@
     "css-minimizer-webpack-plugin": "^7.0.0",
     "dotenv": "^16.4.7",
     "mini-css-extract-plugin": "^2.9.1",
+    "node-xlsx": "^0.24.0",
     "postcss-loader": "^8.1.1",
     "replace-in-file-webpack-plugin": "^1.0.6",
     "style-loader": "^4.0.0",

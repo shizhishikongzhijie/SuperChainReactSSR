@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const Redis = require('ioredis');
+const readXlsx  = require('../util/pkFileUtil');
 require('dotenv').config(); // 加载 .env 文件
 
 process.env.NODE_ENV === 'production' && require('xprofiler').start();//生产模式启动xprofiler开启性能日志输出
@@ -150,6 +151,24 @@ app.post('/message/:publicKey', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
+
+app.post('/api/publicKey/readFile', async (req, res) => {
+    const file = req.body.file;
+    //获取文件类型
+    const fileType = file.split('.').pop();
+    console.log(">>> fileType: " + fileType);
+    if (fileType == 'xlsx') {
+        //是表格
+        res.send(readXlsx(file));
+    } else {
+        //读取文件
+        const data = await readFile(file, 'utf8');
+        //返回文件
+        res.send(data);
+    }
+})
+
 // serve static assets
 app.get(
     /\.(js|css|map|ico)$/,
