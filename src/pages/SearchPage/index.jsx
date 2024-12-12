@@ -32,7 +32,7 @@ function Search() {
         console.log("searchTerm--" + searchTerm);
         const linkKey = JSON.parse(localStorage.getItem('link')).linkKey
         console.log("localStorage.getItem('link')--" + linkKey)
-        const res = await get("http://localhost:8080/searchVote", { info: AESEncrypt(searchTerm, linkKey) }).catch(err => {
+        const res = await get(process.env.BACKEND_URL+"/searchVote", { info: AESEncrypt(searchTerm, linkKey) }).catch(err => {
             console.log("resData--err: " + err)
         })
         console.log(res);

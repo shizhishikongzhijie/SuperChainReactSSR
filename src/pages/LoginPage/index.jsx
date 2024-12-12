@@ -67,7 +67,7 @@ const Login = () => {
         console.log(data)
         if (loginType === 'account') {
             data.type = 'account'
-            get('http://localhost:8080/login', data).then(res => {
+            get(process.env.BACKEND_URL+'/login', data).then(res => {
                 console.log(res);
                 let resData = JSON.parse(res);
                 console.log(resData)
@@ -89,7 +89,7 @@ const Login = () => {
             })
         } else {
             data.type = 'mail'
-            get('http://localhost:8080/register', data).then(res => {
+            get(process.env.BACKEND_URL+'/register', data).then(res => {
                 console.log(res);
                 let resData = JSON.parse(res);
                 console.log(resData)
@@ -274,7 +274,7 @@ const Login = () => {
                                         message.error('请输入邮箱！');
                                     } else {
                                         console.log("email:{}" + email);
-                                        await get('http://localhost:8080/sendCaptcha', { email: email }).then(res => {
+                                        await get(process.env.BACKEND_URL+'/sendCaptcha', { email: email }).then(res => {
                                             let resData = JSON.parse(res);
                                             console.log(resData)
                                             if (resData.code !== 200) {

@@ -280,7 +280,7 @@ const OptionsItem = () => {
             voteFomat.question = Object.fromEntries(convertDataToMap(question));
             voteFomat.creator = JSON.parse(localStorage.getItem('key')).publicKey;
             const key = JSON.parse(localStorage.getItem('link')).linkKey
-            let res = await get("http://localhost:8080/setVote", { vote: AESEncrypt(JSON.stringify(voteFomat), key) }).catch(err => {
+            let res = await get(process.env.BACKEND_URL+"/setVote", { vote: AESEncrypt(JSON.stringify(voteFomat), key) }).catch(err => {
                 message.error("服务器连接失败");
             })
             //如果res有code

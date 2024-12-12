@@ -8,3 +8,16 @@
 npm install xprofiler --save --xprofiler_binary_host_mirror=https://npmmirror.com/mirrors/xprofiler
 ```
 详情请见：https://www.yuque.com/hyj1991/easy-monitor/application
+
+
+# 确保你在正确的分支上
+git checkout main
+
+# 撤销所有已跟踪文件的本地更改
+git reset --hard HEAD
+
+# 删除所有未跟踪的文件和目录
+git clean -fd
+
+# 再次尝试拉取最新更改
+git pull origin main

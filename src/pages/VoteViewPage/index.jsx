@@ -73,7 +73,7 @@ const VoteView = () => {
             key: JSON.parse(localStorage.getItem("key"))
         }
         //获取linkKey
-        const res = await get("http://localhost:8080/voteView", { requestData: AESEncrypt(JSON.stringify(requestData), linkKey) }).catch(err => {
+        const res = await get(process.env.BACKEND_URL+"/voteView", { requestData: AESEncrypt(JSON.stringify(requestData), linkKey) }).catch(err => {
             console.log("resData--err: " + err)
         })
         console.log(res);
@@ -88,7 +88,7 @@ const VoteView = () => {
             data: AESEncrypt(JSON.stringify(values), key),
             uploader: JSON.parse(localStorage.getItem('key')).publicKey
         }
-        get('http://localhost:8080/vote', req).then(res => {
+        get(process.env.BACKEND_URL+'/vote', req).then(res => {
 
         })
         message.success('提交成功！');

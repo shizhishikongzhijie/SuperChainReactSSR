@@ -14,7 +14,7 @@ const Login = (publicKey, privateKey) => {
     const dispatch = useDispatch()
     const key = JSON.parse(localStorage.getItem('link')).linkKey
     console.log(publicKey, privateKey);
-    get('http://localhost:8080/login', { publicKey: AESEncrypt(publicKey, key), privateKey: AESEncrypt(privateKey, key) }).then(response => {
+    get(process.env.BACKEND_URL+'/login', { publicKey: AESEncrypt(publicKey, key), privateKey: AESEncrypt(privateKey, key) }).then(response => {
         console.log('Success:', response.data);
         dispatch(setAuthToken(response.data))
     }).catch(error => {

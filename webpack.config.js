@@ -7,7 +7,12 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 // const TranspilePlugin = require('transpile-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-require('dotenv').config(); // 加载 .env 文件
+const dotenv = require('dotenv');
+const webpack = require('webpack');
+// 根据当前环境加载相应的 .env 文件
+const envFile = `.env.${process.env.NODE_ENV}`;
+const result = dotenv.config({ path: envFile });
+const { parsed: env } = result;
 const NODE_ENV = process.env.NODE_ENV;
 // const webpack = require('webpack');  // 确保导入了 webpack,否则不能进行热更新
 // const WriteFilePlugin = require('write-file-webpack-plugin');//将文件写入磁盘
@@ -105,13 +110,16 @@ const config = {
             template: path.resolve(__dirname, 'public/index.html'),
             minify: NODE_ENV === 'production',
         }),
+        new webpack.DefinePlugin({
+            'process.env': JSON.stringify(env),
+        }),
         new MiniCssExtractPlugin({
             filename: 'styles-[chunkhash:8].css',
         }),
         NODE_ENV === 'production' && new ReplaceInFileWebpackPlugin([
             {
                 dir: path.resolve(__dirname, 'dist'),
-                test: /\.js$/,
+                test: /\.(js|jsx|ts|tsx)$/,
                 rules: [
                     {
                         search: 'http://localhost:8080',

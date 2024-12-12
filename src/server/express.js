@@ -3,7 +3,8 @@ const path = require('path');
 const express = require('express');
 const Redis = require('ioredis');
 const readXlsx  = require('../util/pkFileUtil');
-require('dotenv').config(); // 加载 .env 文件
+// require('dotenv').config(); // 加载 .env 文件
+require('dotenv').config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
 
 process.env.NODE_ENV === 'production' && require('xprofiler').start();//生产模式启动xprofiler开启性能日志输出
 
@@ -53,7 +54,7 @@ app.use(express.urlencoded({ extended: true }));
 // app.use(webpackHotMiddleware(compiler));
 const getInitialData = async () => {
     const { publicKey, privateKey } = generateRSAKeyPair();
-    const response = await get('http://localhost:8080/link', { "publicKey": publicKey }).catch(err => {
+    const response = await get(process.env.BACKEND_URL+'/link', { "publicKey": publicKey }).catch(err => {
         console.log("link失败");
     })
     // console.log("link_express: " + JSON.stringify(response))

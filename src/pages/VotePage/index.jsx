@@ -37,7 +37,7 @@ function Vote() {
         const key = JSON.parse(localStorage.getItem('link')).linkKey
         let creator = JSON.parse(localStorage.getItem('key')).publicKey
         // 获取投票列表数据
-        get('http://localhost:8080/searchVoteByCreator', { creator:AESEncrypt(creator,key) }).then(res=>{
+        get(process.env.BACKEND_URL+'/searchVoteByCreator', { creator:AESEncrypt(creator,key) }).then(res=>{
             console.log(res)
             console.log(JSON.parse(res).data)
             setVoteList(JSON.parse(res).data.voteList)
@@ -47,7 +47,7 @@ function Vote() {
     function searchVoteByPkType(){
         const key = JSON.parse(localStorage.getItem('link')).linkKey
         // 获取投票列表数据
-        get('http://localhost:8080/searchVoteByPkType', { type:AESEncrypt(searchType,key) }).then(res=>{
+        get(process.env.BACKEND_URL+'/searchVoteByPkType', { type:AESEncrypt(searchType,key) }).then(res=>{
             console.log(res)
             console.log(JSON.parse(res).data)
             setVoteList(JSON.parse(res).data.voteList)
@@ -55,7 +55,7 @@ function Vote() {
     }
     function searchManagerCount(){
         // 获取投票列表数据
-        get('http://localhost:8080/searchManagerCount', {}).then(res=>{
+        get(process.env.BACKEND_URL+'/searchManagerCount', {}).then(res=>{
             console.log(res)
             console.log(JSON.parse(res).data)
             setManagerCountList(JSON.parse(res).data.managerCountList);
@@ -80,7 +80,7 @@ function Vote() {
     // useEffect(() => {
     //     const fetchVoteList = async () => {
     //         try {
-    //             const response = await fetch('http://localhost:8080/getBlockList', {
+    //             const response = await fetch(process.env.BACKEND_URL+'/getBlockList', {
     //                 method: 'POST',
     //                 headers: {
     //                     'Content-Type': 'application/json'

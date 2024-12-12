@@ -67,7 +67,7 @@ const Bind = () => {
     const formRef = useRef();
     const [qrCodeText, setQrCodeText] = useState("");
     const getQrCodeText = async () => {
-        const res = await get("http://localhost:8080/getQRCode", { name: "shizhishi" })
+        const res = await get(process.env.BACKEND_URL+"/getQRCode", { name: "shizhishi" })
         console.log("qrCodeText: " + res);
         return JSON.parse(res).data.qrCodeText;
     }

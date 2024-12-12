@@ -1,6 +1,7 @@
 const WebSocket = require('ws');
 const http = require('http');
-require('dotenv').config();
+require('dotenv').config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
+
 const Redis = require('ioredis');
 
 // 创建两个 Redis 客户端实例：一个用于命令操作，另一个用于监听 Pub/Sub 消息
