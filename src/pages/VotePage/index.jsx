@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import VoteViewCardGroup from '../../components/VoteViewCardGroup/VoteViewCardGroup';
 import VoteNeededCardGroup from '../../components/VoteNeededCardGroup';
 import { Empty, Row, Col, Card, Select, Input } from 'antd';
-import {get} from '../../util/request';
+import { get } from '../../util/request';
 import { AESEncrypt } from '../../util/AESUtil';
 import './index.css'
 import data from '../../testdata/TestData';
@@ -20,8 +20,8 @@ const Info = ({ title, value, bordered }) => {
 function Vote() {
     // 状态：当前选中的部分
     const [activeSection, setActiveSection] = useState('managing');
-    const [managerCountList,setManagerCountList] = useState([0,0,0])
-    const [searchType,setSearchType] = useState('1')//Type:  0:已投 1:未投 2:所有
+    const [managerCountList, setManagerCountList] = useState([0, 0, 0])
+    const [searchType, setSearchType] = useState('1')//Type:  0:已投 1:未投 2:所有
     // 参考：投票列表详情视图的引用
     const tipsViewRef = useRef(null);
     // 状态：投票列表
@@ -37,25 +37,25 @@ function Vote() {
         const key = JSON.parse(localStorage.getItem('link')).linkKey
         let creator = JSON.parse(localStorage.getItem('key')).publicKey
         // 获取投票列表数据
-        get(process.env.BACKEND_URL+'/searchVoteByCreator', { creator:AESEncrypt(creator,key) }).then(res=>{
+        get(process.env.BACKEND_URL + '/searchVoteByCreator', { creator: AESEncrypt(creator, key) }).then(res => {
             console.log(res)
             console.log(JSON.parse(res).data)
             setVoteList(JSON.parse(res).data.voteList)
         })
     }
 
-    function searchVoteByPkType(){
+    function searchVoteByPkType() {
         const key = JSON.parse(localStorage.getItem('link')).linkKey
         // 获取投票列表数据
-        get(process.env.BACKEND_URL+'/searchVoteByPkType', { type:AESEncrypt(searchType,key) }).then(res=>{
+        get(process.env.BACKEND_URL + '/searchVoteByPkType', { type: AESEncrypt(searchType, key) }).then(res => {
             console.log(res)
             console.log(JSON.parse(res).data)
             setVoteList(JSON.parse(res).data.voteList)
         })
     }
-    function searchManagerCount(){
+    function searchManagerCount() {
         // 获取投票列表数据
-        get(process.env.BACKEND_URL+'/searchManagerCount', {}).then(res=>{
+        get(process.env.BACKEND_URL + '/searchManagerCount', {}).then(res => {
             console.log(res)
             console.log(JSON.parse(res).data)
             setManagerCountList(JSON.parse(res).data.managerCountList);
@@ -68,13 +68,13 @@ function Vote() {
     }, [])
 
     useEffect(() => {
-        if(activeSection==='managing'){
+        if (activeSection === 'managing') {
             searchVoteList()
-        }else{
+        } else {
             searchVoteByPkType()
         }
-        
-    }, [activeSection,searchType])
+
+    }, [activeSection, searchType])
 
     // 使用Effect Hook来获取投票列表
     // useEffect(() => {
@@ -111,13 +111,13 @@ function Vote() {
             <Card bordered={false}>
                 <Row>
                     <Col sm={8} xs={24}>
-                        <Info title="管理中" value={managerCountList[0]+"个任务"} bordered />
+                        <Info title="管理中" value={managerCountList[0] + "个任务"} bordered />
                     </Col>
                     <Col sm={8} xs={24}>
-                        <Info title="已投票" value={managerCountList[1]+"个任务"} bordered />
+                        <Info title="已投票" value={managerCountList[1] + "个任务"} bordered />
                     </Col>
                     <Col sm={8} xs={24}>
-                        <Info title="未投票" value={managerCountList[2]+"个任务"} />
+                        <Info title="未投票" value={managerCountList[2] + "个任务"} />
                     </Col>
                 </Row>
             </Card>
@@ -147,18 +147,37 @@ function Vote() {
                     }}>
                         <Col>
                             <Select
-                                defaultValue="lucy"
+                                defaultValue="未投票"
                                 style={{
                                     width: 120,
                                 }}
                                 allowClear
                                 options={[
                                     {
-                                        value: 'lucy',
-                                        label: 'Lucy',
+                                        value: '未投票',
+                                        label: '未投票',
                                     },
+                                    {
+                                        value: '已投票',
+                                        label: '已投票',
+                                    },
+                                    {
+                                        value: '已结束',
+                                        label: '已结束',
+                                    },
+                                    {
+                                        value: '已过期',
+                                        label: '已过期',
+                                    },
+                                    {
+                                        value: '已取消',
+                                        label: '已取消',
+                                    }
                                 ]}
-                                onChange={(value) => { console.log(value) }}
+                                onChange={(value) => { 
+                                    setSearchType(value)
+                                    console.log(value) 
+                                }}
                                 placeholder="select it"
                             />
                         </Col>

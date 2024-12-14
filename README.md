@@ -19,5 +19,8 @@ git reset --hard HEAD
 # 删除所有未跟踪的文件和目录
 git clean -fd
 
+# 丢弃未提交的更改
+git reset --hard HEAD
+
 # 再次尝试拉取最新更改
 git pull origin main

@@ -14,7 +14,7 @@ import reportWebVitals from './reportWebVitals';
 import { CustomRouter, RouterBeforeEach } from './components/ProtectedRoute/ProtectedRoute';
 import { generateRSAKeyPair, RSADecrypt } from './util/RSAUtil';
 import { get } from './util/request';
-import io from 'socket.io-client';
+// import io from 'socket.io-client';
 import './App.css';
 const Application=({initialData,isLimit,voteView})=> {
   
