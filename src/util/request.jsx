@@ -6,6 +6,12 @@ import { AESDecrypt, AESEncrypt } from './AESUtil';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { message, Spin } from 'antd';
+// 判断是否在浏览器中
+const isBrowser = typeof window !== 'undefined' && window.localStorage;
+let logger;
+if (!isBrowser) {
+    logger = require('../server/logger');
+}
 //判断是否在浏览器中
 // const location = useLocation();
 // const navigate = useNavigate();
@@ -14,7 +20,7 @@ import { message, Spin } from 'antd';
  */
 function getToken() {
     // 从存储或其他地方获取令牌
-    if (typeof window !== 'undefined' && window.localStorage) {
+    if (isBrowser) {
         // 浏览器环境
         return window.localStorage.getItem('token') || null;
     }
@@ -22,7 +28,7 @@ function getToken() {
 
 function getLinkId() {
     // 从存储或其他地方获取令牌
-    if (typeof window !== 'undefined' && window.localStorage) {
+    if (isBrowser) {
         // 浏览器环境
         return JSON.parse(window.localStorage.getItem('link')).linkId || null;
     }
@@ -67,7 +73,7 @@ apiClient.interceptors.request.use(
     async (request) => {
         try {
 
-            if (typeof window !== 'undefined' && window.localStorage) {
+            if (isBrowser) {
                 const token = getToken();
                 const linkId = getLinkId();
                 console.log("token: " + token);
@@ -81,7 +87,11 @@ apiClient.interceptors.request.use(
             }
             return request;
         } catch (err) {
-            console.log(`科室隔离配置查询失败：${err}`);
+            if (isBrowser) {
+                console.log(`科室隔离配置查询失败：${err}`);
+            } else {
+                logger.error(`科室隔离配置查询失败：${err}`);
+            }
         }
         return request;
     },
@@ -108,14 +118,17 @@ apiClient.interceptors.response.use(
             hideLoading()
         }
         // 对响应数据进行解密
-        if (typeof window !== 'undefined' && window.localStorage) {
+        if (isBrowser) {
             // 浏览器环境
             console.log("response: " + JSON.stringify(response));
             let linkKey = JSON.parse(window.localStorage.getItem('link')).linkKey || null;
             return AESDecrypt(response.data, linkKey);
         }
-        if (typeof window !== 'undefined' && window.localStorage)
+        if (isBrowser) {
             console.log("response2: " + JSON.stringify(response));
+        } else {
+            logger.error("response2: " + JSON.stringify(response));
+        }
         return response.data;
     },
 
@@ -124,10 +137,24 @@ apiClient.interceptors.response.use(
             hideLoading()
         }
         if (error.message === 'Network Error') {
-            message.warning('网络连接异常！')
+            if (isBrowser) {
+                message.warning('网络连接异常！')
+
+            }
+            else {
+                logger.error({ req: err }, '网络连接异常！');
+
+            }
         }
         if (error.code === 'ECONNABORTED') {
-            message.warning('请求超时，请重试')
+            if (isBrowser) {
+                console.log('请求超时，请重试');
+
+            }
+            else {
+                logger.error({ req: error }, '请求超时，请重试');
+
+            }
         }
         // 处理错误响应
         // console.log(JSON.stringify(error.response.data));
@@ -136,8 +163,7 @@ apiClient.interceptors.response.use(
             const status = error.response.status;
 
             // 根据不同的状态码做出反应
-            if (typeof window !== 'undefined' && window.localStorage) {
-
+            if (isBrowser) {
                 switch (status) {
                     case 401: // 未认证
                         message.error('未授权，请重新登录');
@@ -152,9 +178,12 @@ apiClient.interceptors.response.use(
                         message.error('您没有访问此资源的权限');
                         break;
                     default:
-                        console.error('Error:', JSON.stringify(error.response.data));
-                        break;
+                        if (isBrowser)
+                            console.error('Error:', JSON.stringify(error.response.data));
+
                 }
+            } else {
+                logger.error({ req: error }, 'error');
             }
 
             return error.response.data;

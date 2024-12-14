@@ -1,8 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
-const Redis = require('ioredis');
+// const Redis = require('ioredis');
 const readXlsx  = require('../util/pkFileUtil');
+const logger = require('./logger');
+
 // require('dotenv').config(); // 加载 .env 文件
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
 
@@ -55,7 +57,7 @@ app.use(express.urlencoded({ extended: true }));
 const getInitialData = async () => {
     const { publicKey, privateKey } = generateRSAKeyPair();
     const response = await get(process.env.BACKEND_URL+'/link', { "publicKey": publicKey }).catch(err => {
-        console.log("link失败");
+        logger.err({req:err}, 'link失败');
     })
     // console.log("link_express: " + JSON.stringify(response))
     const decrypted = RSADecrypt(response, privateKey);
@@ -68,25 +70,22 @@ const getInitialData = async () => {
 const appHtml = async (req, res) => {
     //查看ip
     let ip = getClientIp(req);
-    console.log(">>> ipv: " + ip);
+    logger.info('ip:'+ ip);
     if (ip) {
         let data = JSON.stringify(getLocationFromIp(ip));
-        console.log(">>> ipAddress: " + data);
+        logger.info('data:'+ data);
         // 从连接池中获取数据库的连接对象
         let isIpInSql = "select * from ip_config where ip_address = '" + ip + "' ";
         const isIpInSqlResult = sqlRes(isIpInSql, [], function (err, result) {
-            console.log(">>> isIpInSqlResult: " + result);
             if (!result) {
                 let sql = "insert into ip_config(ip_address,ip_update_time) values('" + ip + "',now())";
                 const sqlResult = sqlRes(sql, [], function (err, result) {
-                    console.log(">>> sqlResult: " + result);
                 });
             } else {
                 let sql = "update ip_config set ip_count = ip_count + 1 where ip_address = '" + ip + "'";
                 const sqlResult = sqlRes(sql, [], function (err, result) {
                     let sql2 = "update ip_config set ip_update_time = now() where ip_address = '" + ip + "'";
                     const sqlResult2 = sqlRes(sql2, [], function (err, result) {
-                        console.log(">>> sqlResult: " + result);
                     });
                 });
             }
@@ -103,9 +102,8 @@ const appHtml = async (req, res) => {
     //如果路径是/voteView
     if (req.path == "/voteView") {
         voteView.vid = req.query.vid;
-        console.log(">>> vid: " + voteView.vid);
         voteView.type = req.query.type;
-        console.log(">>> type: " + voteView.type);
+        logger.info('voteView:'+ voteView);
     }
     const initialData = JSON.parse(await getInitialData());
     if (initialData === '') {
@@ -118,47 +116,47 @@ const appHtml = async (req, res) => {
     );
 }
 
-// 创建一个 Redis 客户端实例
-const redisClient = new Redis({
-    host: '121.43.115.41',
-    port: 6379,
-    password: '3473901836teng',
-    db: 1,
-    connectTimeout: 5000,
-    retryStrategy(times) {
-        const delay = Math.min(times * 50, 2000);
-        return delay;
-    },
-});
-// 消息路由处理
-app.post('/message/:publicKey', async (req, res) => {
-    const { publicKey } = req.params;
-    const message = req.body.message;
+// // 创建一个 Redis 客户端实例
+// const redisClient = new Redis({
+//     host: '121.43.115.41',
+//     port: 6379,
+//     password: '3473901836teng',
+//     db: 1,
+//     connectTimeout: 5000,
+//     retryStrategy(times) {
+//         const delay = Math.min(times * 50, 2000);
+//         return delay;
+//     },
+// });
+// // 消息路由处理
+// app.post('/message/:publicKey', async (req, res) => {
+//     const { publicKey } = req.params;
+//     const message = req.body.message;
 
-    if (!message) {
-        return res.status(400).send('Message is required.');
-    }
+//     if (!message) {
+//         return res.status(400).send('Message is required.');
+//     }
 
-    try {
-        // 将消息推送到用户的 Redis List
-        await redisClient.rpush(publicKey, JSON.stringify(message));
+//     try {
+//         // 将消息推送到用户的 Redis List
+//         await redisClient.rpush(publicKey, JSON.stringify(message));
 
-        // 发布消息更新通知到指定频道
-        await redisClient.publish('message-updates', JSON.stringify({ publicKey }));
+//         // 发布消息更新通知到指定频道
+//         await redisClient.publish('message-updates', JSON.stringify({ publicKey }));
 
-        res.send('Message queued and notification sent.');
-    } catch (error) {
-        console.error('Error queuing message:', error);
-        res.status(500).send('Internal Server Error');
-    }
-});
+//         res.send('Message queued and notification sent.');
+//     } catch (error) {
+//         console.error('Error queuing message:', error);
+//         res.status(500).send('Internal Server Error');
+//     }
+// });
 
 
 app.post('/api/publicKey/readFile', async (req, res) => {
     const file = req.body.file;
     //获取文件类型
     const fileType = file.split('.').pop();
-    console.log(">>> fileType: " + fileType);
+    logger.info('fileType:'+ fileType);
     if (fileType == 'xlsx') {
         //是表格
         res.send(readXlsx(file));
@@ -186,5 +184,6 @@ app.use(limiter, (req, res) => {
 
 // run express server on port 8000
 app.listen(process.env.NODE_PORT, () => {
-    console.log('Express server started at http://localhost:' + process.env.NODE_PORT);
+    logger.info('Express server started at http://localhost:' + process.env.NODE_PORT);
+    // console.log('Express server started at http://localhost:' + process.env.NODE_PORT);
 });

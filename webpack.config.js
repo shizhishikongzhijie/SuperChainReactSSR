@@ -35,6 +35,12 @@ const config = {
     // Resolve files configuration
     resolve: {
         extensions: ['.js', '.jsx', '.ts', '.tsx', '.json', '.scss'],
+        fallback: {
+            path: require.resolve("path-browserify"),//bunyan
+            os: require.resolve("os-browserify/browser"),//bunyan
+            stream: require.resolve("stream-browserify"),//bunyan
+            fs: false, // 如果不需要 fs 模块，可以设置为 false
+        },
     },
 
     cache: {
@@ -46,7 +52,8 @@ const config = {
 
     externals: {
         './cptable': 'var cptable',
-        '../xlsx.js': 'var _XLSX'
+        '../xlsx.js': 'var _XLSX',
+        'dtrace-provider': 'false', // 排除 dtrace-provider,bunyan
     },
 
     // Module/Loaders configuration

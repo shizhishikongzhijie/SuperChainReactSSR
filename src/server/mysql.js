@@ -1,4 +1,6 @@
 const mysql = require("mysql");
+const logger = require('./logger');
+
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
 // 加载 .env 文件
 const NODE_ENV = process.env.NODE_ENV;
@@ -30,16 +32,16 @@ const pool = mysql.createPool(
 const sqlRes = (sql, params, callback) => {
     pool.getConnection((err, conn) => {
         if (err) {
-            console.error("数据库连接失败", err);
+            logger.error({req:err},"数据库连接失败");
             return callback(err);
         }
-        console.log("数据库连接成功");
+        logger.info("数据库连接成功");
 
         conn.query(sql, params, (queryErr, results) => {
             conn.release(); // 释放连接回到连接池
 
             if (queryErr) {
-                console.error("数据库查询失败", queryErr);
+                logger.error({req:queryErr},"数据库连接失败");
                 return callback(queryErr);
             }
 
