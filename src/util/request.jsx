@@ -127,7 +127,7 @@ apiClient.interceptors.response.use(
         if (isBrowser) {
             console.log("response2: " + JSON.stringify(response));
         } else {
-            logger.error({res:JSON.stringify(response)});
+            logger.error({err:response});
         }
         return response.data;
     },
