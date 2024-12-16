@@ -57,7 +57,7 @@ app.use(express.urlencoded({ extended: true }));
 const getInitialData = async () => {
     const { publicKey, privateKey } = generateRSAKeyPair();
     const response = await get(process.env.BACKEND_URL+'/link', { "publicKey": publicKey }).catch(err => {
-        logger.err({req:err}, 'link失败');
+        logger.error({err:err}, 'link失败');
     })
     // console.log("link_express: " + JSON.stringify(response))
     const decrypted = RSADecrypt(response, privateKey);
@@ -65,6 +65,7 @@ const getInitialData = async () => {
     const linkId = sanitizePublicKey(publicKey);
     const linkKey = decrypted;
     const data = { linkId, linkKey };
+    logger.info('link_data: ' + JSON.stringify(data));
     return JSON.stringify(data);
 };
 const appHtml = async (req, res) => {

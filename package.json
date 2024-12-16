@@ -20,6 +20,7 @@
     "browserify-fs": "^1.0.0",
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
+    "bunyan-serializer": "^0.1.10",
     "cabin": "^13.2.8",
     "clean-webpack-plugin": "^4.0.0",
     "cors": "^2.8.5",

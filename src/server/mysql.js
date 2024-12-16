@@ -32,7 +32,7 @@ const pool = mysql.createPool(
 const sqlRes = (sql, params, callback) => {
     pool.getConnection((err, conn) => {
         if (err) {
-            logger.error({req:err},"数据库连接失败");
+            logger.error({err:err},"数据库连接失败");
             return callback(err);
         }
         logger.info("数据库连接成功");
@@ -41,7 +41,7 @@ const sqlRes = (sql, params, callback) => {
             conn.release(); // 释放连接回到连接池
 
             if (queryErr) {
-                logger.error({req:queryErr},"数据库连接失败");
+                logger.error({err:queryErr},"数据库连接失败");
                 return callback(queryErr);
             }
 

@@ -1,29 +1,14 @@
 const bunyan = require('bunyan');
-/**
- * 请求序列化器，用于日志记录
- * @param {Object} req - HTTP请求对象
- * @returns {Object} 序列化后的请求对象
- */
-function reqSerializer(req) {
-    if (!req) {
-        return {};
-    }
-    const { method, url, headers } = req;
-    const safeHeaders = headers ? Object.fromEntries(
-        Object.entries(headers).filter(([key]) => !['authorization', 'cookie'].includes(key.toLowerCase()))
-    ) : {};
-    return {
-        method: method || 'UNKNOWN',
-        url: url || 'UNKNOWN',
-        headers: safeHeaders
-    };
-}
+const bunyanSerializer = require('bunyan-serializer');
+
 
 // 日志配置
 const logConfig = {
     name: 'reactssr', // 应用程序名称
     serializers: {
-        req: reqSerializer
+        req: bunyanSerializer.reqSerializer,
+        res: bunyanSerializer.resSerializer,
+        err: bunyanSerializer.errSerializer
     },
     streams: [
         {

@@ -127,7 +127,7 @@ apiClient.interceptors.response.use(
         if (isBrowser) {
             console.log("response2: " + JSON.stringify(response));
         } else {
-            logger.error("response2: " + JSON.stringify(response));
+            logger.error({res:JSON.stringify(response)});
         }
         return response.data;
     },
@@ -142,7 +142,7 @@ apiClient.interceptors.response.use(
 
             }
             else {
-                logger.error({ req: err }, '网络连接异常！');
+                logger.error({ err: err }, '网络连接异常！');
 
             }
         }
@@ -152,7 +152,7 @@ apiClient.interceptors.response.use(
 
             }
             else {
-                logger.error({ req: error }, '请求超时，请重试');
+                logger.error({ err: error }, '请求超时，请重试');
 
             }
         }
@@ -183,7 +183,7 @@ apiClient.interceptors.response.use(
 
                 }
             } else {
-                logger.error({ req: error }, 'error');
+                logger.error({ err: error }, 'error');
             }
 
             return error.response.data;
