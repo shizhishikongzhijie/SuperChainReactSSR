@@ -145,7 +145,26 @@ const config = {
         concatenateModules: true,//Scope Hoisting 是 Webpack 的一项优化技术，它通过重新排序和合并模块来减少打包文件中的函数作用域数量。
         minimize: true,//压缩代码js,css
         minimizer: [
-            new TerserPlugin(),
+            new TerserPlugin({
+                terserOptions: {
+                    compress: {
+                        drop_console: true, // 移除 console 语句
+                        drop_debugger: true, // 移除 debugger 语句
+                        pure_funcs: ['console.log'], // 移除特定的函数调用
+                    },
+                    mangle: {
+                        properties: {
+                            regex: /^_/ // 混淆私有属性（以 _ 开头）
+                        },
+                    },
+                    format: {
+                        comments: false, // 移除所有注释
+                    },
+                    sourceMap: true, // 生成 Source Map
+                },
+                extractComments: false, // 禁止提取注释到单独的文件
+                parallel: true, // 启用并行压缩
+            }),
             new CssMinimizerPlugin(),
         ],
         splitChunks: {
