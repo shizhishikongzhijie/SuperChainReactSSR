@@ -1,12 +1,6 @@
-import React,{useState,useEffect} from 'react';
-import {
-    Avatar,
-    Card,
-    List,
-    Progress,
-    Radio,
-    Input
-} from 'antd';
+import React, {useEffect, useState} from 'react';
+import {Avatar, Card, Input, List, Progress, Radio} from 'antd';
+
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 const { Search } = Input;
@@ -35,7 +29,7 @@ const ListContent = ({ creator, startDate,limitDate, hasVotedCount,uploaderCount
     );
 };
 const VoteNeededCardGroup = ({ dataSource }) => {
-    const [dataSources, setDataSources] = useState([]);
+    const [dataSources, setDataSources] = useState(dataSource);
     const [paginationProps,setPaginationProps] = useState({
         showSizeChanger: true,
         showQuickJumper: true,
@@ -43,7 +37,7 @@ const VoteNeededCardGroup = ({ dataSource }) => {
         total: 0,
     });
     useEffect(() => {
-        setDataSources(dataSource);
+        // setDataSources(dataSource);
         setPaginationProps({
             showSizeChanger: true,
             showQuickJumper: true,

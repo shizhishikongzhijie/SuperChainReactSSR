@@ -1,27 +1,23 @@
-import { UserOutlined } from '@ant-design/icons';
 import {
-    SearchOutlined,
+    EditOutlined,
+    GithubFilled,
+    InfoCircleFilled,
     LoginOutlined,
     LogoutOutlined,
-    InfoCircleFilled,
-    EditOutlined,
     QuestionCircleFilled,
-    GithubFilled,
-    SettingOutlined
+    SearchOutlined,
+    SettingOutlined,
+    UserOutlined
 } from '@ant-design/icons';
-import { Input, Tag, Dropdown } from 'antd';
-import {
-    PageContainer,
-    ProLayout,
-    DefaultFooter
-} from '@ant-design/pro-components';
-import React, { useState } from 'react';
+import {Input, Popover, Tag} from 'antd';
+import {DefaultFooter, PageContainer, ProLayout} from '@ant-design/pro-components';
+import React, {useEffect, useState} from 'react';
 import defaultProps from './_defaultProps';
-import { LoginOut } from "../../components/Login/Login"
-import { useSelector, useDispatch } from 'react-redux'
-import { deleteAuthToken, setAuthToken } from '../../rouder/userSlice'
+import {LoginOut} from "../../components/Login/Login"
+import {useDispatch} from 'react-redux'
+import {deleteAuthToken} from '../../rouder/userSlice'
 import CustomMessage from '../CustomMessage/CustomMessage';
-import { useEffect } from 'react';
+
 const CustomProLayout = (props) => {
     const dispatch = useDispatch();
     const [MessageSuccess, setMessageSuccess] = useState('');
@@ -32,64 +28,55 @@ const CustomProLayout = (props) => {
         "contentWidth": "Fluid",
         "fixedHeader": true
     });
-    let [userItem, setUserItem] = useState([
-        {
-            key: 'login',
-            href: '/login',
-            icon: <LoginOutlined />,
-            label: '登录',
-            onClick: () => {
-                window.location.href = '/login'
-            }
+    let [userItem, setUserItem] = useState([{
+        key: 'login',
+        href: '/login',
+        icon: <LoginOutlined/>,
+        label: '登录',
+        onClick: () => {
+            window.location.href = '/login'
         }
-    ])
+    }])
     useEffect(() => {
         if (window.localStorage.getItem('token')) {
-            setUserItem([
-                {
-                    key: 'center',
-                    href: '/user',
-                    icon: <UserOutlined />,
-                    label: '个人中心',
-                    onClick: () => {
-                        window.location.href = '/user'
-                    }
-                },
-                {
-                    key: 'settings',
-                    href: '/settings',
-                    icon: <SettingOutlined />,
-                    label: '个人设置',
-                    onClick: () => {
-                        window.location.href = '/settings'
-                    }
-                },
-                {
-                    key: 'change-password',
-                    icon: <EditOutlined />,
-                    label: "修改密码",
-                },
-                {
-                    type: 'divider',
-                },
-                {
-                    key: 'logout',
-                    href: '/logout',
-                    icon: <LogoutOutlined />,
-                    label: '退出登录',
-                    onClick: () => {
-                        setMessageSuccess(<LoginOut />)
-                        //转到登录页面
-                        //删除loaclstorage
-                        window.localStorage.removeItem('token');
-                        window.localStorage.removeItem('key');
-                        dispatch(deleteAuthToken())
-                        window.location.href = '/login'
-
-                    }
-                },
-
-            ]);
+            setUserItem([{
+                key: 'center',
+                href: '/user',
+                icon: <UserOutlined/>,
+                label: '个人中心',
+                onClick: () => {
+                    window.location.href = '/user'
+                }
+            }, {
+                key: 'settings',
+                href: '/settings',
+                icon: <SettingOutlined/>,
+                label: '个人设置',
+                onClick: () => {
+                    window.location.href = '/settings'
+                }
+            }, {
+                key: 'change-password',
+                icon: <EditOutlined/>,
+                label: "修改密码",
+            }, {
+                key: 'divider',
+                type: 'divider',
+            }, {
+                key: 'logout',
+                href: '/logout',
+                icon: <LogoutOutlined/>,
+                label: '退出登录',
+                onClick: () => {
+                    setMessageSuccess(<LoginOut/>)
+                    //转到登录页面
+                    //删除loaclstorage
+                    window.localStorage.removeItem('token');
+                    window.localStorage.removeItem('key');
+                    dispatch(deleteAuthToken())
+                    window.location.href = '/login'
+                }
+            },]);
         }
     }, [])
     const [pathname, setPathname] = useState('/');
@@ -126,25 +113,25 @@ const CustomProLayout = (props) => {
                                 }
                                 suffix={
                                     <Tag color="rgba(42, 46, 54, 0.06)"
-                                        style={{
-                                            borderRadius: "100px",
-                                            color: "rgba(42, 46, 54, 0.45)"
-                                        }}
+                                         style={{
+                                             borderRadius: "100px",
+                                             color: "rgba(42, 46, 54, 0.45)"
+                                         }}
                                     >Ctrl K</Tag>
                                 }
                                 placeholder="搜索方案"
                             />
                         ) : undefined,
-                        <InfoCircleFilled key="InfoCircleFilled" />,
-                        <QuestionCircleFilled key="QuestionCircleFilled" />,
-                        <GithubFilled key="GithubFilled" />,
+                        <InfoCircleFilled key="InfoCircleFilled"/>,
+                        <QuestionCircleFilled key="QuestionCircleFilled"/>,
+                        <GithubFilled key="GithubFilled"/>,
                     ];
                 }}
                 footerRender={() => (
                     <DefaultFooter
                         links={[
-                            { key: 'test', title: 'layout', href: 'www.alipay.com' },
-                            { key: 'test2', title: 'layout2', href: 'www.alipay.com' },
+                            {key: 'test', title: 'layout', href: 'www.alipay.com'},
+                            {key: 'test2', title: 'layout2', href: 'www.alipay.com'},
                         ]}
                         copyright="这是一条测试文案"
                     />
@@ -181,7 +168,7 @@ const CustomProLayout = (props) => {
                 menuItemRender={(item, dom) => (
                     <a
                         href={pathname}
-                        style={{ textDecoration: 'none' }}
+                        style={{textDecoration: 'none'}}
                         onClick={() => {
                             setPathname(item.path || '/');
                         }}
@@ -190,16 +177,19 @@ const CustomProLayout = (props) => {
                     </a>
                 )}
                 avatarProps={{
-                    icon: <UserOutlined />,
+                    icon: <UserOutlined/>,
                     render: (props, dom) => {
                         return (
-                            <Dropdown
-                                menu={{
-                                    items: userItem
-                                }}
-                            >
+                            <Popover content={<div style={{display: 'flex', flexDirection: 'column',padding:'2px 4px'}}>
+                                {userItem.map((item, index) => (
+                                    <div key={index} style={{display: 'flex'}} onClick={item.onClick}>
+                                        <div style={{marginInline:'2px 5px'}}>{item.icon}</div>
+                                        <div>{item.label}</div>
+                                    </div>
+                                ))}
+                            </div>}>
                                 {dom}
-                            </Dropdown>
+                            </Popover>
                         );
                     }
                 }}
@@ -209,7 +199,7 @@ const CustomProLayout = (props) => {
                     {props.children}
                 </PageContainer>
             </ProLayout>
-            <CustomMessage type="success" >{MessageSuccess}</CustomMessage>
+            <CustomMessage type="success">{MessageSuccess}</CustomMessage>
         </div>
     );
 };

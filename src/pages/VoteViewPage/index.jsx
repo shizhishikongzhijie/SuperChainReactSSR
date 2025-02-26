@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Form, Input, Button, Radio, Checkbox, Select, DatePicker, TimePicker, message, Card, App } from 'antd';
-import { useSelector, useDispatch } from 'react-redux';
-import { get } from '../../util/request';
-import { AESEncrypt } from '../../util/AESUtil';
-const { Option } = Select;
+import React, {useEffect, useState} from 'react';
+import {App, Button, Card, Checkbox, DatePicker, Form, Input, Radio, Select, TimePicker} from 'antd';
+import {useDispatch, useSelector} from 'react-redux';
+import {get} from '../../util/request';
+import {AESEncrypt} from '../../util/AESUtil';
+
+const {Option} = Select;
 
 // 示例数据：问题列表
 const questions = [
@@ -22,7 +23,7 @@ const questions = [
 ];
 
 const VoteView = () => {
-    const { message } = App.useApp();
+    const {message} = App.useApp();
     const dispatch = useDispatch();
     const [form] = Form.useForm();
     const voteView = useSelector(state => state.voteView);
@@ -66,6 +67,7 @@ const VoteView = () => {
         console.log("dataSource--" + JSON.stringify(data));
         return data;
     }
+
     const fetchVoteViewPageDataSource = async () => {
         const linkKey = JSON.parse(localStorage.getItem('link')).linkKey
         let requestData = {
@@ -73,27 +75,27 @@ const VoteView = () => {
             key: JSON.parse(localStorage.getItem("key"))
         }
         //获取linkKey
-        const res = await get(process.env.BACKEND_URL+"/voteView", { requestData: AESEncrypt(JSON.stringify(requestData), linkKey) }).catch(err => {
+        const res = await get(process.env.BACKEND_URL + "/voteView", {requestData: AESEncrypt(JSON.stringify(requestData), linkKey)}).catch(err => {
             console.log("resData--err: " + err)
         })
         console.log(res);
         //如果res有code
-            return res;
+        return res;
     }
     const onFinish = (values) => {
         const key = JSON.parse(localStorage.getItem('link')).linkKey
         console.log('Received values of form: ', values);
         let req = {
-            voteId : voteView.vid,
+            voteId: voteView.vid,
             data: AESEncrypt(JSON.stringify(values), key),
             uploader: JSON.parse(localStorage.getItem('key')).publicKey
         }
-        get(process.env.BACKEND_URL+'/vote', req).then(res => {
+        get(process.env.BACKEND_URL + '/vote', req).then(res => {
 
         })
         message.success('提交成功！');
     };
-    
+
 
     return (
         <div className='d-flex justify-content-center'>
@@ -105,7 +107,7 @@ const VoteView = () => {
                     layout="vertical"
                     scrollToFirstError
                 >
-                    <CustomFormItems dataSource={dataSource} />
+                    <CustomFormItems dataSource={dataSource}/>
                     <Form.Item>
                         <Button type="primary" htmlType="submit">
                             提交
@@ -118,15 +120,15 @@ const VoteView = () => {
     );
 };
 
-const CustomFormItems  = (props) => {
+const CustomFormItems = (props) => {
     const dataSource = props.dataSource
     console.log("dataSource--" + JSON.stringify(dataSource))
-    if( JSON.stringify(dataSource)== "{}"){
+    if (JSON.stringify(dataSource) == "{}") {
         return <div>加载中...</div>
-    }else{
+    } else {
         console.log("dataSource--" + JSON.stringify(dataSource.question))
 
-        return  dataSource.question.map((item) => (
+        return dataSource.question.map((item) => (
             <Form.Item
                 key={item.id}
                 label={item.title}
@@ -147,9 +149,9 @@ const CustomFormItems  = (props) => {
 const renderQuestion = (question) => {
     switch (question.type) {
         case 'text':
-            return <Input placeholder="请输入" />;
+            return <Input placeholder="请输入"/>;
         case 'number':
-            return <Input type="number" placeholder="请输入数字" />;
+            return <Input type="number" placeholder="请输入数字"/>;
         case 'radio':
             return (
                 <Radio.Group>
@@ -181,9 +183,9 @@ const renderQuestion = (question) => {
                 </Select>
             );
         case 'date':
-            return <DatePicker style={{ width: '100%' }} />;
+            return <DatePicker style={{width: '100%'}}/>;
         case 'time':
-            return <TimePicker style={{ width: '100%' }} />;
+            return <TimePicker style={{width: '100%'}}/>;
         default:
             return null;
     }

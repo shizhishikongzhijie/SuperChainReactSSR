@@ -1,9 +1,9 @@
-import React from 'react';
-import { ProCard } from '@ant-design/pro-components';
-import { Statistic, Avatar } from 'antd';
+import React, {useState} from 'react';
+import {ProCard} from '@ant-design/pro-components';
+import {Avatar, Statistic} from 'antd';
 import RcResizeObserver from 'rc-resize-observer';
-import { useState } from 'react';
 import CustomTimeline from '../../components/CustomTimeline/CustomTimeline';
+
 const { Divider } = ProCard;
 
 const HomeDataCarousel = ({ id, ifRender }) => {
@@ -12,7 +12,7 @@ const HomeDataCarousel = ({ id, ifRender }) => {
     return (
         <>
             <RcResizeObserver.Collection
-                key="resize-observer-a"
+                key="resize-observer-b"
                 onResize={(offset) => {
                     setResponsive(offset.width < 596);
                 }}

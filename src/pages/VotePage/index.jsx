@@ -1,21 +1,22 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import VoteViewCardGroup from '../../components/VoteViewCardGroup/VoteViewCardGroup';
 import VoteNeededCardGroup from '../../components/VoteNeededCardGroup';
-import { Empty, Row, Col, Card, Select, Input } from 'antd';
-import { get } from '../../util/request';
-import { AESEncrypt } from '../../util/AESUtil';
+import {Card, Col, Empty, Input, Row, Select} from 'antd';
+import {get} from '../../util/request';
+import {AESEncrypt} from '../../util/AESUtil';
 import './index.css'
-import data from '../../testdata/TestData';
-const { Search } = Input;
-const Info = ({ title, value, bordered }) => {
+
+const {Search} = Input;
+const Info = ({title, value, bordered}) => {
     return (
         <div className='d-flex flex-column align-items-center'>
             <span>{title}</span>
-            <p style={{ fontSize: '1.6rem' }}>{value}</p>
-            {bordered && <em />}
+            <p style={{fontSize: '1.6rem'}}>{value}</p>
+            {bordered && <em/>}
         </div>
     );
 };
+
 // 投票组件
 function Vote() {
     // 状态：当前选中的部分
@@ -37,22 +38,29 @@ function Vote() {
         const key = JSON.parse(localStorage.getItem('link')).linkKey
         let creator = JSON.parse(localStorage.getItem('key')).publicKey
         // 获取投票列表数据
-        get(process.env.BACKEND_URL + '/searchVoteByCreator', { creator: AESEncrypt(creator, key) }).then(res => {
-            console.log(res)
+        const fetchData = async () => {
+            console.log("searchVoteList")
+            let res = await get(process.env.BACKEND_URL + '/searchVoteByCreator', {creator: AESEncrypt(creator, key)});
             console.log(JSON.parse(res).data)
+            // console.log(JSON.parse(res).data)
             setVoteList(JSON.parse(res).data.voteList)
-        })
+        }
+        fetchData()
     }
 
     function searchVoteByPkType() {
         const key = JSON.parse(localStorage.getItem('link')).linkKey
         // 获取投票列表数据
-        get(process.env.BACKEND_URL + '/searchVoteByPkType', { type: AESEncrypt(searchType, key) }).then(res => {
+        get(process.env.BACKEND_URL + '/searchVoteByPkType', {type: AESEncrypt(searchType, key)}).then(res => {
             console.log(res)
             console.log(JSON.parse(res).data)
-            setVoteList(JSON.parse(res).data.voteList)
+            let data = JSON.parse(res).data.voteList;
+            if(data){
+                setVoteList(data);
+            }
         })
     }
+
     function searchManagerCount() {
         // 获取投票列表数据
         get(process.env.BACKEND_URL + '/searchManagerCount', {}).then(res => {
@@ -111,13 +119,13 @@ function Vote() {
             <Card bordered={false}>
                 <Row>
                     <Col sm={8} xs={24}>
-                        <Info title="管理中" value={managerCountList[0] + "个任务"} bordered />
+                        <Info title="管理中" value={managerCountList[0] + "个任务"} bordered/>
                     </Col>
                     <Col sm={8} xs={24}>
-                        <Info title="已投票" value={managerCountList[1] + "个任务"} bordered />
+                        <Info title="已投票" value={managerCountList[1] + "个任务"} bordered/>
                     </Col>
                     <Col sm={8} xs={24}>
-                        <Info title="未投票" value={managerCountList[2] + "个任务"} />
+                        <Info title="未投票" value={managerCountList[2] + "个任务"}/>
                     </Col>
                 </Row>
             </Card>
@@ -125,11 +133,11 @@ function Vote() {
 
                 <div className="vote-navigation">
                     <button onClick={() => setActiveSection('managing')}
-                        className={activeSection === 'managing' ? 'active' : ' opacity-50'}>
+                            className={activeSection === 'managing' ? 'active' : ' opacity-50'}>
                         管理
                     </button>
                     <button onClick={() => setActiveSection('voted')}
-                        className={activeSection === 'voted' ? 'active' : 'opacity-50 '}>
+                            className={activeSection === 'voted' ? 'active' : 'opacity-50 '}>
                         投票
                     </button>
                 </div>
@@ -174,9 +182,9 @@ function Vote() {
                                         label: '已取消',
                                     }
                                 ]}
-                                onChange={(value) => { 
+                                onChange={(value) => {
                                     setSearchType(value)
-                                    console.log(value) 
+                                    console.log(value)
                                 }}
                                 placeholder="select it"
                             />
@@ -192,12 +200,13 @@ function Vote() {
                             />
                         </Col>
 
-                        <Col >
+                        <Col>
                             Col
                         </Col>
                     </Row>
-                    {voteList === 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> :
-                        activeSection === 'managing' ? <VoteViewCardGroup dataSource={voteList} /> : <VoteNeededCardGroup dataSource={voteList} />
+                    {voteList.length === 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/> :
+                        activeSection === 'managing' ? <VoteViewCardGroup dataSource={voteList}/> :
+                            <VoteNeededCardGroup dataSource={voteList}/>
                     }
                 </div>
             </div>

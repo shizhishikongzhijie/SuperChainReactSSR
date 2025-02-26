@@ -33,6 +33,7 @@ const app = express();
 const { getClientIp, getLocationFromIp } = require('../util/IpUtil');
 const rateLimit = require("express-rate-limit");//限制请求
 const { pool, sqlRes } = require('./mysql');
+const {readFile} = require("fs");
 const indexHTML = fs.readFileSync(
     path.resolve(__dirname, '../../dist/index.html'),
     { encoding: 'utf8' }
@@ -73,24 +74,6 @@ const appHtml = async (req, res) => {
     let ip = getClientIp(req);
     logger.info('ip:'+ ip);
     if (ip) {
-        let data = JSON.stringify(getLocationFromIp(ip));
-        logger.info('data:'+ data);
-        // 从连接池中获取数据库的连接对象
-        let isIpInSql = "select * from ip_config where ip_address = '" + ip + "' ";
-        const isIpInSqlResult = sqlRes(isIpInSql, [], function (err, result) {
-            if (!result) {
-                let sql = "insert into ip_config(ip_address,ip_update_time) values('" + ip + "',now())";
-                const sqlResult = sqlRes(sql, [], function (err, result) {
-                });
-            } else {
-                let sql = "update ip_config set ip_count = ip_count + 1 where ip_address = '" + ip + "'";
-                const sqlResult = sqlRes(sql, [], function (err, result) {
-                    let sql2 = "update ip_config set ip_update_time = now() where ip_address = '" + ip + "'";
-                    const sqlResult2 = sqlRes(sql2, [], function (err, result) {
-                    });
-                });
-            }
-        });
     }
 
     // set header and status

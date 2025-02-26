@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 
-import { Row, Col, Card, Tabs, Segmented, Divider, Switch, Popover } from "antd";
-import { updateStatus, updateSegmentedValue, updateIsChecked } from "../../rouder/searchFilterSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
+import {Card, Divider, Popover, Segmented, Switch, Tabs} from "antd";
+import {updateIsChecked, updateSegmentedValue, updateStatus} from "../../rouder/searchFilterSlice";
+import {useDispatch, useSelector} from "react-redux";
+import {EditOutlined, EllipsisOutlined, SettingOutlined} from '@ant-design/icons';
+
 const SearchViewCardGrid = (props) => {
     const [data, setData] = useState([]);
     const [page, setPage] = useState(props.pageNumber || 1);
@@ -81,21 +82,25 @@ const SearchViewCardGrid = (props) => {
                 activeKey={props.status}
                 size="large"
                 items={[
-                    { label: '全部', key: '1' },
-                    { label: '进行中', key: '2' },
-                    { label: '已结束', key: '3', disabled: true },
-                    { label: '未开始', key: '4' },
+                    {label: '全部', key: '1'},
+                    {label: '进行中', key: '2'},
+                    {label: '已结束', key: '3'},
+                    {label: '未开始', key: '4'},
                 ]}
                 onChange={(value) => {
                     dispatch(updateStatus(value));
                     setPage(1); // 切换标签时重置到第一页
                 }}
             />
-            <CustomFilter />
-            <Row gutter={[24, 24]} justify="space-evenly" style={{ marginBlock: "20px" }}>
+            <CustomFilter/>
+            <div style={{
+                marginBlock: "20px",
+                display: "grid",
+                gridTemplateColumns: "repeat(4, minmax(300px, 1fr))",
+            }}>
                 {data?.[page - 1]?.map((item, index) => (
-                    <Col xs={24} sm={12} md={12} lg={6} key={index}>
                         <CustomCard
+                            key={index}
                             isCreater={item.creator === userpublicKey}
                             vid={item.voteId}
                             title={item.title}
@@ -103,10 +108,9 @@ const SearchViewCardGrid = (props) => {
                             description={item.description}
                             limitDate={item.limitDate}
                         />
-                    </Col>
                 ))}
-            </Row>
-            
+            </div>
+
         </>
     );
 };
@@ -116,14 +120,14 @@ const CustomCard = (props) => (
         title={props.title}
         bordered={false}
         hoverable={true}
-        style={{ width: 300 }}
+        style={{width: 300}}
         actions={[
-            props.isCreater && <SettingOutlined key="setting" />,
-            <EditOutlined key="edit" onClick={() => window.location.href = `/voteView?vid=${props.vid}&type=edit`} />,
-            <EllipsisOutlined key="ellipsis" />,
+            props.isCreater && <SettingOutlined key="setting"/>,
+            <EditOutlined key="edit" onClick={() => window.location.href = `/voteView?vid=${props.vid}&type=edit`}/>,
+            <EllipsisOutlined key="ellipsis"/>,
         ].filter(Boolean)}
     >
-        <p style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{props.creator}</p>
+        <p style={{overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>{props.creator}</p>
         <p>{props.description}</p>
         <p>{props.limitDate}</p>
     </Card>
@@ -138,13 +142,13 @@ const CustomFilter = () => {
         <>
             <Segmented
                 defaultValue="最多投票"
-                style={{ marginBottom: 8 }}
+                style={{marginBottom: 8}}
                 size="large"
                 onChange={(value) => dispatch(updateSegmentedValue(value))}
                 options={['最多投票', '最多问题', '最新发布', '最晚结束']}
                 value={segmentedValue}
             />
-            <Divider type="vertical" />
+            <Divider type="vertical"/>
             <Popover content="筛选可填投票" trigger="hover">
                 <Switch
                     checkedChildren="开启"

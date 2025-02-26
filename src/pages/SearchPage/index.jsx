@@ -1,10 +1,10 @@
-import React, { useState, useDeferredValue, useEffect } from 'react';
-import { Empty, AutoComplete, App } from 'antd';
-import { Pagination } from 'antd';
+import React, {useDeferredValue, useEffect, useState} from 'react';
+import {App, AutoComplete, Empty, Pagination} from 'antd';
 import './index.css'
 import SearchViewCardGrid from '../../components/SearchViewCardGrid/SearchViewCardGrid';
-import { get } from '../../util/request';
-import { AESEncrypt } from '../../util/AESUtil';
+import {get} from '../../util/request';
+import {AESEncrypt} from '../../util/AESUtil';
+
 function Search() {
     const { message } = App.useApp();
     const [searchTerm, setSearchTerm] = useState("");
@@ -79,7 +79,9 @@ function Search() {
             </form>
             <div style={{
                 opacity: isStale ? 0.5 : 1,
-                transition: isStale ? 'opacity 0.2s 0.2s linear' : 'opacity 0s 0s linear'
+                transition: isStale ? 'opacity 0.2s 0.2s linear' : 'opacity 0s 0s linear',
+                width: '100%',
+                paddingInline: '30px'
             }}>
                 {searchTerm === '' ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : <SearchViewCardGrid dataSource={data} pageNumber={page} />}
             </div>

@@ -1,11 +1,11 @@
 // utils/request.js
 
 import axios from 'axios';
-import { AESDecrypt, AESEncrypt } from './AESUtil';
+import {AESDecrypt} from './AESUtil';
 // import { useLocation, useNavigate } from 'react-router-dom';
-import React, { Component } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
-import { message, Spin } from 'antd';
+import {message, Spin} from 'antd';
 // 判断是否在浏览器中
 const isBrowser = typeof window !== 'undefined' && window.localStorage;
 let logger;
@@ -90,6 +90,8 @@ apiClient.interceptors.request.use(
             if (isBrowser) {
                 console.log(`科室隔离配置查询失败：${err}`);
             } else {
+                console.log(`科室隔离配置查询失败：${err}`);
+
                 logger.error(`科室隔离配置查询失败：${err}`);
             }
         }
@@ -127,7 +129,7 @@ apiClient.interceptors.response.use(
         if (isBrowser) {
             console.log("response2: " + JSON.stringify(response));
         } else {
-            logger.error({err:response});
+            console.log("response2: " + response.data);
         }
         return response.data;
     },
@@ -142,7 +144,9 @@ apiClient.interceptors.response.use(
 
             }
             else {
-                logger.error({ err: err }, '网络连接异常！');
+                message.warning('网络连接异常！')
+
+                logger.error({ err: error }, '网络连接异常！');
 
             }
         }
@@ -152,6 +156,8 @@ apiClient.interceptors.response.use(
 
             }
             else {
+                console.log('请求超时，请重试');
+
                 logger.error({ err: error }, '请求超时，请重试');
 
             }
@@ -183,6 +189,7 @@ apiClient.interceptors.response.use(
 
                 }
             } else {
+                console.error('Errddor:', JSON.stringify(error.response.data));
                 logger.error({ err: error }, 'error');
             }
 

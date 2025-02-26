@@ -1,15 +1,15 @@
-import React from 'react';
-import { ProDescriptions, ProCard, ProList } from '@ant-design/pro-components';
-import { Input, Tooltip, Badge,Pagination, Button, Progress } from 'antd';
-import { useState, useEffect } from 'react';
-import { useRef } from 'react';
-import RcResizeObserver from 'rc-resize-observer';
-import data from '../../testdata/TestData';
-const VoteViewCard = ({ dataSourceItem }) => {
+import React, {useRef, useState} from 'react';
+import {ProCard, ProDescriptions} from '@ant-design/pro-components';
+import {Button, Pagination} from 'antd';
+import RcResizeObserver from 'rc-resize-observer'
+
+const VoteViewCard = ({dataSourceItem}) => {
+    const [data, setData] = useState(dataSourceItem);
     const actionRef = useRef();
     const [isEditable, setIsEditable] = useState(false);
     return (
         <ProDescriptions
+            // loading={false}
             actionRef={actionRef}
             //  bordered
             formProps={{
@@ -19,107 +19,58 @@ const VoteViewCard = ({ dataSourceItem }) => {
                 },
             }}
             title="可编辑的定义列表"
-            request={async () => {
-                return Promise.resolve({
-                    success: true,
-                    data: { ...dataSourceItem },
-                });
-            }}
+            // request={async () => {
+            //     return Promise.resolve({
+            //         success: true,
+            //         data: {...data},
+            //     });
+            // }}
+            dataSource={{...data}}
             editable={isEditable}
 
             columns={[
                 {
+                    key: 'title',
                     title: '标题',
-                    key: 'text',
                     dataIndex: 'title',
                     copyable: true,
                     ellipsis: true,
                 },
-                // {
-                //     title: '状态',
-                //     key: 'state',
-                //     dataIndex: 'state',
-                //     valueType: 'select',
-
-                //     valueEnum: {
-                //         all: { text: '全部', status: 'Default' },
-                //         open: {
-                //             text: '未解决',
-                //             status: 'Error',
-                //         },
-                //         closed: {
-                //             text: '已解决',
-                //             status: 'Success',
-                //         },
-                //     },
-                // },
-                // {
-                //     title: '分值',
-                //     dataIndex: 'fraction',
-
-                //     valueType: (record) => {
-                //         const scoringMethod = record?.state2;
-                //         if (scoringMethod === 'Success') return 'select';
-                //         return 'digit';
-                //     },
-                //     fieldProps: {
-                //         mode: 'multiple',
-                //     },
-                //     request: async () =>
-                //         ['A', 'B', 'D', 'E', 'F'].map((item, index) => ({
-                //             label: item,
-                //             value: index,
-                //         })),
-                // },
-
                 {
-                    title: '开始时间',
                     key: 'startDate',
+                    title: '开始时间',
                     dataIndex: 'startDate',
 
                 },
                 {
-                    title: '结束时间',
                     key: 'limitDate',
+                    title: '结束时间',
                     dataIndex: 'limitDate',
 
                 },
                 {
-                    title: 'progress',
-                    key: 'progress',
-                    render: (_, record) => (
-                        <Progress
-                            percent={(dataSourceItem.hasVotedCount / dataSourceItem.uploaderCount) * 100}
-                            status={dataSourceItem.hasVotedCount < dataSourceItem.uploaderCount ? 'active' : 'success'}
-                            size="small"
-                            style={{
-                                width: 180,
-                            }}
-                        />
-                    ),
-                },
-                {
+                    key: 'privacy',
                     title: 'privacy',
                     dataIndex: 'privacy',
-                    dataIndex: 'privacy',
                 },
                 {
+                    key: 'action',
                     title: '操作',
                     valueType: 'option',
                     render: () =>
                         [
-                            <Button rel="noopener noreferrer" key="link"
-                                onClick={() => {
-                                    setIsEditable(!isEditable);
-                                    //开始编辑
-                                }}
+                            <Button rel="noopener noreferrer"
+                                    onClick={() => {
+                                        setIsEditable(!isEditable);
+                                        //开始编辑
+                                    }}
                             >
                                 {isEditable ? "取消编辑" : "编辑"}
                             </Button>,
-                            <Button rel="noopener noreferrer" key="link"
-                            // onClick={() => {
-                            //     setIsEditable(!isEditable);
-                            // }}
+                            <Button rel="noopener noreferrer"
+                                onClick={() => {
+                                    setIsEditable(!isEditable);
+                                }}
                             >
                                 {isEditable ? "保存" : "查看"}
                             </Button>,
@@ -129,29 +80,20 @@ const VoteViewCard = ({ dataSourceItem }) => {
             ]}
 
         >
-            {/* <ProDescriptions.Item
-                label="进度条"
-            >
-                <Progress
-                            percent={dataSourceItem.hasVotedCount / dataSourceItem.uploaderCount * 100}
-                            status={dataSourceItem.hasVotedCount < dataSourceItem.uploaderCount ? 'active' : 'success'}
-                            size="small"
-                            style={{
-                                width: 180,
-                            }}
-                        />
-            </ProDescriptions.Item> */}
+            <ProDescriptions.Item label="进度条" valueType="progress">
+                {data.uploaderCount !== 0 ? (data.hasVotedCount / data.uploaderCount) * 100 : 0}
+            </ProDescriptions.Item>
         </ProDescriptions>
     );
 };
 
-const VoteViewCardGroup = ({ dataSource }) => {
+const VoteViewCardGroup = ({dataSource}) => {
     const [responsive, setResponsive] = useState(false);
-    const [dataSources, setDataSources] = useState([]);
+    const [dataSources, setDataSources] = useState(dataSource);
     const [page, setPageNumber] = useState(1);
-    useEffect(() => {
-        setDataSources(dataSource);
-    }, [dataSource]);
+    // useEffect(() => {
+    //     setDataSources(dataSource);
+    // }, [dataSource]);
     const onChangePagination = (pageNumber) => {
         console.log('Page: ', pageNumber);
     };
@@ -164,23 +106,29 @@ const VoteViewCardGroup = ({ dataSource }) => {
                 setResponsive(offset.width < 596);
             }}
         >
-            <ProCard.Group ghost direction={responsive ? 'row' : 'column'} style={{ marginTop: '16px' }}>
-                {(dataSources || []).map((item, index) => (
-                    <Badge.Ribbon text="Hippies" color="purple">
-                        <ProCard key={index}
-                            style={{ marginBottom: 24 }}
-                            //bordered
-                            hoverable
-                        >
-                            <VoteViewCard dataSourceItem={item} />
-                        </ProCard>
-                    </Badge.Ribbon>
-                ))}
+            <>
+                <ProCard.Group ghost direction={responsive ? 'row' : 'column'} style={{marginTop: '16px'}}>
+                    {dataSources && dataSources.map((item, index) => (
+                        // <Badge.Ribbon key={index} text="Hippies" color="purple">
+                        <div key={index}>
+                            <ProCard
+                                style={{marginBottom: 24}}
+                                //bordered
+                                hoverable
+                            >
+                                <VoteViewCard dataSourceItem={item}/>
+                            </ProCard>
+                        </div>
 
-            </ProCard.Group>
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
-                <Pagination showQuickJumper defaultCurrent={page} total={500} onChange={onChangePagination} hideOnSinglePage={true} />
-            </div>
+                        // </Badge.Ribbon>
+                    ))}
+
+                </ProCard.Group>
+                <div style={{display: 'flex', justifyContent: 'center', marginTop: '16px'}}>
+                    <Pagination showQuickJumper defaultCurrent={page} total={500} onChange={onChangePagination}
+                                hideOnSinglePage={true}/>
+                </div>
+            </>
         </RcResizeObserver.Collection>
     )
 }
