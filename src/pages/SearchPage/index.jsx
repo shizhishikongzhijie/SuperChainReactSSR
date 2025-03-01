@@ -85,7 +85,7 @@ function Search() {
             }}>
                 {searchTerm === '' ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : <SearchViewCardGrid dataSource={data} pageNumber={page} />}
             </div>
-            <Pagination showQuickJumper defaultCurrent={page} total={data.length*8} onChange={onChangePagination} hideOnSinglePage={true} />
+            <Pagination showQuickJumper defaultCurrent={1} current={page} pageSize={8} total={data.length} onChange={onChangePagination} hideOnSinglePage={true} />
         </div>
     );
 }

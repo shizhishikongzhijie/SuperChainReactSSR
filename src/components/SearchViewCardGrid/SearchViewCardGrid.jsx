@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 
-import {Card, Divider, Popover, Segmented, Switch, Tabs} from "antd";
+import {Card, Divider, Popover, Segmented, Switch, Tabs, Tooltip} from "antd";
 import {updateIsChecked, updateSegmentedValue, updateStatus} from "../../rouder/searchFilterSlice";
 import {useDispatch, useSelector} from "react-redux";
 import {EditOutlined, EllipsisOutlined, SettingOutlined} from '@ant-design/icons';
@@ -8,7 +8,7 @@ import {EditOutlined, EllipsisOutlined, SettingOutlined} from '@ant-design/icons
 const SearchViewCardGrid = (props) => {
     const [data, setData] = useState([]);
     const [page, setPage] = useState(props.pageNumber || 1);
-    const [cardNum, setCardNum] = useState(8);
+    const [cardNum, setCardNum] = useState(10);
     const dispatch = useDispatch();
     const userpublicKey = useSelector(state => state.user.publicKey);
     const segmentedValue = useSelector(state => state.searchFilter.segmentedValue);
@@ -97,17 +97,18 @@ const SearchViewCardGrid = (props) => {
                 marginBlock: "20px",
                 display: "grid",
                 gridTemplateColumns: "repeat(4, minmax(300px, 1fr))",
+                rowGap: '20px'
             }}>
                 {data?.[page - 1]?.map((item, index) => (
-                        <CustomCard
-                            key={index}
-                            isCreater={item.creator === userpublicKey}
-                            vid={item.voteId}
-                            title={item.title}
-                            creator={item.creator}
-                            description={item.description}
-                            limitDate={item.limitDate}
-                        />
+                    <CustomCard
+                        key={index}
+                        isCreater={item.creator === userpublicKey}
+                        vid={item.voteId}
+                        title={item.title}
+                        creator={item.creator}
+                        description={item.description}
+                        limitDate={item.limitDate}
+                    />
                 ))}
             </div>
 
@@ -122,9 +123,17 @@ const CustomCard = (props) => (
         hoverable={true}
         style={{width: 300}}
         actions={[
-            props.isCreater && <SettingOutlined key="setting"/>,
-            <EditOutlined key="edit" onClick={() => window.location.href = `/voteView?vid=${props.vid}&type=edit`}/>,
-            <EllipsisOutlined key="ellipsis"/>,
+            props.isCreater &&
+            <Tooltip title="编辑问卷">
+                <SettingOutlined key="setting"/>
+            </Tooltip>,
+            <Tooltip title="填写问卷">
+                <EditOutlined key="edit" onClick={() => window.location.href = `/voteView?vid=${props.vid}&type=edit`}/>
+            </Tooltip>,
+            <Tooltip title="查看问卷">
+                <EllipsisOutlined key="ellipsis"
+                                  onClick={() => window.location.href = `/voteView?vid=${props.vid}&type=view`}/>
+            </Tooltip>
         ].filter(Boolean)}
     >
         <p style={{overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>{props.creator}</p>
