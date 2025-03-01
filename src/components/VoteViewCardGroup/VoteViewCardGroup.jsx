@@ -17,7 +17,7 @@ const VoteViewCard = ({dataSourceItem}) => {
                 message.error("服务器连接失败");
             })
             // console.log(res);
-            setCountVoteData(JSON.parse(res).data);
+            setCountVoteData(res.data);
         };
         fetchData();
     }, [countVoteVid]);
