@@ -19,7 +19,9 @@ const VoteViewCard = ({dataSourceItem}) => {
             // console.log(res);
             setCountVoteData(res.data);
         };
-        fetchData();
+        if(countVoteVid!==0){
+            fetchData();
+        }
     }, [countVoteVid]);
     const showDrawer = () => {
         setOpen(true);
