@@ -1,6 +1,6 @@
 const path = require('path');
 const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackBar = require('webpackbar');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -11,8 +11,8 @@ const dotenv = require('dotenv');
 const webpack = require('webpack');
 // 根据当前环境加载相应的 .env 文件
 const envFile = `.env.${process.env.NODE_ENV}`;
-const result = dotenv.config({ path: envFile });
-const { parsed: env } = result;
+const result = dotenv.config({path: envFile});
+const {parsed: env} = result;
 const NODE_ENV = process.env.NODE_ENV;
 // const webpack = require('webpack');  // 确保导入了 webpack,否则不能进行热更新
 // const WriteFilePlugin = require('write-file-webpack-plugin');//将文件写入磁盘
@@ -152,11 +152,12 @@ const config = {
                         drop_debugger: true, // 移除 debugger 语句
                         pure_funcs: ['console.log'], // 移除特定的函数调用
                     },
-                    mangle: {
-                        properties: {
-                            regex: /^_/ // 混淆私有属性（以 _ 开头）
-                        },
-                    },
+                    //此混淆无法使用
+                    // mangle: {
+                    //     properties: {
+                    //         regex: /^_/ // 混淆私有属性（以 _ 开头）
+                    //     },
+                    // },
                     format: {
                         comments: false, // 移除所有注释
                     },

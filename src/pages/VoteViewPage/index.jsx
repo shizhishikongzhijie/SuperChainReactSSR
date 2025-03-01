@@ -27,14 +27,13 @@ const VoteView = () => {
     const dispatch = useDispatch();
     const [form] = Form.useForm();
     const voteView = useSelector(state => state.voteView);
-    const [type, setType] = useState("");
+    const [type, setType] = useState(useSelector(state => state.voteView).type);
     const [dataSource, setDataSource] = useState({});
     useEffect(() => {
-        setType(voteView.type);
         fetchVoteViewPageDataSource().then(
             (res) => {
                 res = JSON.parse(res)
-                if (res.code == 200) {
+                if (res.code === 200) {
                     res.data.voteView.question = formatVoteQuestion(res.data.voteView.question)
                     setDataSource(res.data.voteView)
                     console.log("dataSource--" + JSON.stringify(res.data.voteView))
@@ -43,7 +42,7 @@ const VoteView = () => {
                 }
             }
         );
-    }, [voteView])
+    }, [])
 
 
     function formatVoteQuestion(questions) {
@@ -107,12 +106,12 @@ const VoteView = () => {
                     layout="vertical"
                     scrollToFirstError
                 >
-                    <CustomFormItems dataSource={dataSource}/>
-                    <Form.Item>
+                    <CustomFormItems type={type} dataSource={dataSource}/>
+                    {type === 'edit' ? <Form.Item>
                         <Button type="primary" htmlType="submit">
                             提交
                         </Button>
-                    </Form.Item>
+                    </Form.Item> : <div></div>}
                 </Form>
             </Card>
         </div>
@@ -121,7 +120,8 @@ const VoteView = () => {
 };
 
 const CustomFormItems = (props) => {
-    const dataSource = props.dataSource
+    const dataSource = props.dataSource;
+    const type = props.type;
     console.log("dataSource--" + JSON.stringify(dataSource))
     if (JSON.stringify(dataSource) == "{}") {
         return <div>加载中...</div>
@@ -141,27 +141,38 @@ const CustomFormItems = (props) => {
                     },
                 ]}
             >
-                {renderQuestion(item)}
+                {renderQuestion(item, type === "edit")}
             </Form.Item>
         ))
     }
 };
-const renderQuestion = (question) => {
+const renderQuestion = (question, isEdit) => {
     switch (question.type) {
         case 'text':
             return <Input placeholder="请输入"/>;
         case 'number':
             return <Input type="number" placeholder="请输入数字"/>;
         case 'radio':
-            return (
-                <Radio.Group>
-                    {question.options.map((option, index) => (
-                        <Radio key={index} value={option}>
+            if (isEdit) {
+                return (
+                    <Radio.Group>
+                        {question.options.map((option, index) => (
+                            <Radio key={index} value={option}>
+                                {option}
+                            </Radio>
+                        ))}
+                    </Radio.Group>
+                );
+            } else {
+                return (
+                    <div style={{display: 'flex', marginBlock: "5px"}}>{question.options.map((option, index) => (
+                        <div key={index} style={{marginRight: "10px"}}>
                             {option}
-                        </Radio>
-                    ))}
-                </Radio.Group>
-            );
+                        </div>
+                    ))}</div>
+                )
+            }
+
         case 'checkbox':
             return (
                 <Checkbox.Group>

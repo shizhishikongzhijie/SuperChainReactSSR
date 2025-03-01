@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import VoteViewCardGroup from '../../components/VoteViewCardGroup/VoteViewCardGroup';
 import VoteNeededCardGroup from '../../components/VoteNeededCardGroup';
-import {Card, Col, Empty, Input, Row, Select} from 'antd';
+import {Card, Col, Empty, Input, Row, Select, Spin} from 'antd';
 import {get} from '../../util/request';
 import {AESEncrypt} from '../../util/AESUtil';
 import './index.css'
@@ -30,6 +30,8 @@ function Vote() {
     // 状态：当前选中的投票ID
     const [currentVoteId, setCurrentVoteId] = useState('');
 
+    const [loading, setLoading] = useState(true);
+
     const onSearch = (value) => {
         console.log(value);
     }
@@ -45,7 +47,7 @@ function Vote() {
             // console.log(JSON.parse(res).data)
             setVoteList(JSON.parse(res).data.voteList)
         }
-        fetchData()
+        fetchData().then(() => setLoading(false))
     }
 
     function searchVoteByPkType() {
@@ -55,8 +57,9 @@ function Vote() {
             console.log(res)
             console.log(JSON.parse(res).data)
             let data = JSON.parse(res).data.voteList;
-            if(data){
+            if (data) {
                 setVoteList(data);
+                setLoading(false);
             }
         })
     }
@@ -76,6 +79,7 @@ function Vote() {
     }, [])
 
     useEffect(() => {
+        setLoading(true);
         if (activeSection === 'managing') {
             searchVoteList()
         } else {
@@ -204,10 +208,13 @@ function Vote() {
                             Col
                         </Col>
                     </Row>
-                    {voteList.length === 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/> :
-                        activeSection === 'managing' ? <VoteViewCardGroup dataSource={voteList}/> :
-                            <VoteNeededCardGroup dataSource={voteList}/>
-                    }
+                    <Spin spinning={loading} delay={500}>
+                        {voteList.length === 0 ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/> :
+                            activeSection === 'managing' ? <VoteViewCardGroup dataSource={voteList}/> :
+                                <VoteNeededCardGroup dataSource={voteList}/>
+                        }
+                    </Spin>
+
                 </div>
             </div>
             {/* 投票详情视图 */}

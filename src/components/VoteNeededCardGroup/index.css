@@ -1,0 +1,14 @@
+.creator-text {
+    width: 100px;
+    word-wrap: break-word;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    /* 添加跨浏览器兼容性样式 */
+    display: -moz-box;
+    -moz-box-orient: vertical;
+    line-clamp: 3;
+}

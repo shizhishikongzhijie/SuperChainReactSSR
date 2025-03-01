@@ -1,15 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {Avatar, Card, Input, List, Progress, Radio} from 'antd';
+import {Button, Card, Input, List, Pagination, Progress, Radio} from 'antd';
+import './index.css'
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
-const { Search } = Input;
-const ListContent = ({ creator, startDate,limitDate, hasVotedCount,uploaderCount}) => {
+const {Search} = Input;
+const ListContent = ({creator, startDate, limitDate, hasVotedCount, uploaderCount}) => {
     return (
         <div className='d-flex flex-row justify-content-between w-50'>
             <div className='d-flex flex-column justify-content-center'>
                 <span>Creator</span>
-                <p>{creator}</p>
+                <div className={'creator-text'}>{creator}</div>
             </div>
             <div className='d-flex flex-column justify-content-center'>
                 <span>开始时间/结束时间</span>
@@ -17,20 +18,21 @@ const ListContent = ({ creator, startDate,limitDate, hasVotedCount,uploaderCount
             </div>
             <div className='d-flex flex-column justify-content-center'>
                 <Progress
-                    percent={hasVotedCount/uploaderCount*100}
-                    status={hasVotedCount<uploaderCount?'active':'success'}
+                    percent={hasVotedCount / uploaderCount * 100}
+                    status={hasVotedCount < uploaderCount ? 'active' : 'success'}
                     size="small"
                     style={{
-                        width: 180,
+                        width: 120,
                     }}
                 />
             </div>
         </div>
     );
 };
-const VoteNeededCardGroup = ({ dataSource }) => {
+const VoteNeededCardGroup = ({dataSource}) => {
     const [dataSources, setDataSources] = useState(dataSource);
-    const [paginationProps,setPaginationProps] = useState({
+    const [index, setIndex] = useState(1);
+    const [paginationProps, setPaginationProps] = useState({
         showSizeChanger: true,
         showQuickJumper: true,
         pageSize: 5,
@@ -42,7 +44,7 @@ const VoteNeededCardGroup = ({ dataSource }) => {
             showSizeChanger: true,
             showQuickJumper: true,
             pageSize: 5,
-            total: dataSource!=null?dataSource.length:0,
+            total: dataSource != null ? dataSource.length : 0,
         });
     }, [dataSource]);
     const extraContent = (
@@ -52,7 +54,7 @@ const VoteNeededCardGroup = ({ dataSource }) => {
                 <RadioButton value="progress">进行中</RadioButton>
                 <RadioButton value="waiting">等待中</RadioButton>
             </RadioGroup>
-            <Search placeholder="请输入" onSearch={() => ({})} />
+            <Search placeholder="请输入" onSearch={() => ({})}/>
         </div>
     );
     return (
@@ -71,31 +73,43 @@ const VoteNeededCardGroup = ({ dataSource }) => {
             <List
                 size="large"
                 rowKey="id"
-                pagination={paginationProps}
-                dataSource={dataSources}
+                dataSource={dataSources.slice((index - 1) * 5, index * 5)}
                 renderItem={(item) => (
                     <List.Item
                         actions={[
-                            <a
+                            <Button
                                 key="vote"
                                 onClick={(e) => {
                                     e.preventDefault();
                                     //投票，转到投票页面
+                                    window.location.href = `/voteView?vid=${item.voteId}&type=edit`;
                                 }}
                             >
                                 投票
-                            </a>
+                            </Button>
                         ]}
                     >
                         <List.Item.Meta
-                            avatar={<Avatar src="https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png" shape="square" size="large" />}
-                            title={<a href="/voteView">{item.title}</a>}
+                            // avatar={<Avatar src="https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png"
+                            //                 shape="square" size="large"/>}
+                            title={item.title}
                             description={item.description}
+                            style={{
+                                width: '100px'
+                            }}
                         />
                         <ListContent {...item} />
                     </List.Item>
                 )}
             />
+            <Pagination
+                align="center"
+                defaultCurrent={1}
+                current={index}
+                total={dataSources.length}
+                pageSize={5}
+                onChange={setIndex}
+                hideOnSinglePage={true}/>
         </Card>
     );
 };

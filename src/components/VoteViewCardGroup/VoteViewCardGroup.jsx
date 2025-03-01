@@ -1,13 +1,40 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {ProCard, ProDescriptions} from '@ant-design/pro-components';
-import {Button, Pagination} from 'antd';
+import {Button, Drawer, message, Pagination} from 'antd';
 import RcResizeObserver from 'rc-resize-observer'
+import {get} from "../../util/request";
+import CountGroup from "../CountGroup";
 
 const VoteViewCard = ({dataSourceItem}) => {
-    const [data, setData] = useState(dataSourceItem);
     const actionRef = useRef();
     const [isEditable, setIsEditable] = useState(false);
-    return (
+    const [open, setOpen] = useState(false);
+    const [countVoteData, setCountVoteData] = useState({});
+    const [countVoteVid, setCountVoteVid] = useState(0);
+    useEffect(() => {
+        const fetchData = async () => {
+            const res = await get(process.env.BACKEND_URL + '/countVote', {voteId: countVoteVid}).catch(err => {
+                message.error("服务器连接失败");
+            })
+            // console.log(res);
+            setCountVoteData(JSON.parse(res).data);
+        };
+        fetchData();
+    }, [countVoteVid]);
+    const showDrawer = () => {
+        setOpen(true);
+    };
+
+    const onClose = () => {
+        setOpen(false);
+    };
+
+    const countClick = () => {
+        console.log("data: " + JSON.stringify(dataSourceItem))
+        setCountVoteVid(dataSourceItem.voteId)
+        showDrawer()
+    }
+    return (<>
         <ProDescriptions
             // loading={false}
             actionRef={actionRef}
@@ -25,66 +52,67 @@ const VoteViewCard = ({dataSourceItem}) => {
             //         data: {...data},
             //     });
             // }}
-            dataSource={{...data}}
+            dataSource={{...dataSourceItem}}
             editable={isEditable}
 
-            columns={[
+            columns={[{
+
+                key: 'title', title: '标题', dataIndex: 'title', copyable: true, ellipsis: true,
+            },
                 {
-                    key: 'title',
-                    title: '标题',
-                    dataIndex: 'title',
-                    copyable: true,
-                    ellipsis: true,
+                    key: 'startDate', title: '开始时间', dataIndex: 'startDate',
                 },
                 {
-                    key: 'startDate',
-                    title: '开始时间',
-                    dataIndex: 'startDate',
+                    key: 'limitDate', title: '结束时间', dataIndex: 'limitDate',
 
                 },
                 {
-                    key: 'limitDate',
-                    title: '结束时间',
-                    dataIndex: 'limitDate',
-
-                },
-                {
-                    key: 'privacy',
-                    title: 'privacy',
-                    dataIndex: 'privacy',
+                    key: 'privacy', title: 'privacy', dataIndex: 'privacy',
                 },
                 {
                     key: 'action',
                     title: '操作',
                     valueType: 'option',
-                    render: () =>
-                        [
-                            <Button rel="noopener noreferrer"
-                                    onClick={() => {
-                                        setIsEditable(!isEditable);
-                                        //开始编辑
-                                    }}
-                            >
-                                {isEditable ? "取消编辑" : "编辑"}
-                            </Button>,
-                            <Button rel="noopener noreferrer"
+                    render: (index) => [
+                        <Button rel="noopener noreferrer"
                                 onClick={() => {
                                     setIsEditable(!isEditable);
+                                    //开始编辑
                                 }}
-                            >
-                                {isEditable ? "保存" : "查看"}
-                            </Button>,
-                        ]
+                        >
+                            {isEditable ? "取消编辑" : "编辑"}
+                        </Button>,
+                        <Button rel="noopener noreferrer"
+                                onClick={() => {
+                                    if (isEditable) {
+                                        setIsEditable(!isEditable);
+                                    } else {
+                                        window.location.href = `/voteView?vid=${dataSourceItem.voteId}&type=view`;
+                                    }
+                                }}
+                        >
+                            {isEditable ? "保存" : "查看"}
+                        </Button>,
+                        <Button rel="noopener noreferrer"
+                                onClick={countClick}
+                        >
+                            计票
+                        </Button>,]
 
-                }
-            ]}
+                }]}
 
         >
             <ProDescriptions.Item label="进度条" valueType="progress">
-                {data.uploaderCount !== 0 ? (data.hasVotedCount / data.uploaderCount) * 100 : 0}
+                {dataSourceItem.uploaderCount !== 0 ? (dataSourceItem.hasVotedCount / dataSourceItem.uploaderCount) * 100 : 0}
             </ProDescriptions.Item>
         </ProDescriptions>
-    );
+        <Drawer width={640} placement="right" closable={false} onClose={onClose} open={open}>
+            <p className="site-description-item-profile-p" style={{marginBottom: 24}}>
+                {dataSourceItem.title}
+            </p>
+            <CountGroup countVoteData={countVoteData}/>
+        </Drawer>
+    </>);
 };
 
 const VoteViewCardGroup = ({dataSource}) => {
@@ -94,9 +122,6 @@ const VoteViewCardGroup = ({dataSource}) => {
     // useEffect(() => {
     //     setDataSources(dataSource);
     // }, [dataSource]);
-    const onChangePagination = (pageNumber) => {
-        console.log('Page: ', pageNumber);
-    };
     //设置dataSource默认值
 
     return (
@@ -108,8 +133,7 @@ const VoteViewCardGroup = ({dataSource}) => {
         >
             <>
                 <ProCard.Group ghost direction={responsive ? 'row' : 'column'} style={{marginTop: '16px'}}>
-                    {dataSources && dataSources.map((item, index) => (
-                        // <Badge.Ribbon key={index} text="Hippies" color="purple">
+                    {dataSources && dataSources.slice((page - 1) * 5, page * 5).map((item, index) => (// <Badge.Ribbon key={index} text="Hippies" color="purple">
                         <div key={index}>
                             <ProCard
                                 style={{marginBottom: 24}}
@@ -124,13 +148,17 @@ const VoteViewCardGroup = ({dataSource}) => {
                     ))}
 
                 </ProCard.Group>
-                <div style={{display: 'flex', justifyContent: 'center', marginTop: '16px'}}>
-                    <Pagination showQuickJumper defaultCurrent={page} total={500} onChange={onChangePagination}
-                                hideOnSinglePage={true}/>
-                </div>
+                <Pagination
+                    align="center"
+                    showQuickJumper
+                    defaultCurrent={1}
+                    total={dataSources.length}
+                    current={page}
+                    onChange={setPageNumber}
+                    pageSize={5}
+                    hideOnSinglePage={true}/>
             </>
-        </RcResizeObserver.Collection>
-    )
+        </RcResizeObserver.Collection>)
 }
 
 export default VoteViewCardGroup;

@@ -1,25 +1,21 @@
-import React, { useRef, useState } from 'react';
+import React, {useEffect, useRef} from 'react';
 import TipsViewWindow from '../../components/TipsViewWindow/TipsViewWindow';
 import CustomDatePicker from '../../components/DatePicker/CustomDatePicker';
 import CustomPopover from '../../components/Popover/CustomPopover';
-import { setVote,setVotePKList } from '../../rouder/voteSlice';
+import {setVote, setVotePKList} from '../../rouder/voteSlice';
 import * as XLSX from 'xlsx';
-import { Input, Button, Space, InputNumber, Card, App, Switch, Upload } from 'antd';
-import {
-    ProCard,
-    ProForm,
-    ProFormList,
-    ProFormText,
-} from '@ant-design/pro-components';
-import { useSelector, useDispatch } from 'react-redux'
-import { get } from '../../util/request';
-import { AESEncrypt } from '../../util/AESUtil';
-const { TextArea } = Input;
-import { InboxOutlined } from '@ant-design/icons';
-const { Dragger } = Upload;
+import {App, Button, Card, Input, InputNumber, Space, Switch, Upload} from 'antd';
+import {ProCard, ProForm, ProFormList, ProFormText,} from '@ant-design/pro-components';
+import {useDispatch, useSelector} from 'react-redux'
+import {get} from '../../util/request';
+import {AESEncrypt} from '../../util/AESUtil';
+import {InboxOutlined} from '@ant-design/icons';
+
+const {TextArea} = Input;
+const {Dragger} = Upload;
 
 function VoteCreateForm() {
-    const { message } = App.useApp();
+    const {message} = App.useApp();
     const dispatch = useDispatch();
     const title = useSelector(state => state.vote.title)
     const tipsViewRef = useRef(true);
@@ -45,9 +41,9 @@ function VoteCreateForm() {
         const fileReader = new FileReader();
         fileReader.onload = event => {
             try {
-                const { result } = event.target;
+                const {result} = event.target;
                 // 以二进制流方式读取得到整份excel表格对象
-                const workbook = XLSX.read(result, { type: 'binary' });
+                const workbook = XLSX.read(result, {type: 'binary'});
                 // 存储获取到的数据
                 let data = [];
                 // 遍历每张工作表进行读取（这里默认只读取第一张表）
@@ -66,7 +62,7 @@ function VoteCreateForm() {
                 console.log(data);
                 VoteRef.current.publicKeyList = data;
                 console.log("投票公钥数组初始化完成: " + JSON.stringify(Vote));
-                dispatch(setVotePKList({ publicKeyList: data }))
+                dispatch(setVotePKList({publicKeyList: data}))
             } catch (e) {
                 // 这里可以抛出文件类型错误不正确的相关提示
                 message.error('文件类型不正确！');
@@ -97,46 +93,50 @@ function VoteCreateForm() {
             onImportExcel(e.dataTransfer.files[0]);
         },
     };
-    
+
     return (
         <>
             <div className="vote-create-form d-flex flex-column">
-                <h3 >{VoteRef.current.title === '' ? '创建投票' : VoteRef.current.title}</h3>
-                <div >
+                <h3>{VoteRef.current.title === '' ? '创建投票' : VoteRef.current.title}</h3>
+                <div>
                     <div>投票名称 : {VoteRef.current.title}</div>
-                    <OptionsItem />
+                    <OptionsItem vote={VoteRef.current}/>
                 </div>
             </div>
             <TipsViewWindow ref={tipsViewRef} show={true} closeBtn={false}>
                 <form className='d-flex flex-column align-items-center'>
                     <div className="mb-3 mt-3 d-flex flex-column align-items-center">
                         <label className='form-label w-75 m-2'>
-                            <CustomPopover id='titlePopover' message='警告' type='warning' content='标题不能为空' />
-                            <Input id='title' showCount allowClear maxLength={20} placeholder="请输入投票标题" />
+                            <CustomPopover id='titlePopover' message='警告' type='warning' content='标题不能为空'/>
+                            <Input id='title' showCount allowClear maxLength={20} placeholder="请输入投票标题"/>
                         </label>
                         <label className='form-label w-75 mb-4 mt-2'>
-                            <CustomPopover id='descriptionPopover' message='警告' type='warning' content='描述不能为空' />
+                            <CustomPopover id='descriptionPopover' message='警告' type='warning'
+                                           content='描述不能为空'/>
                             <TextArea id='description' autoSize={{
                                 minRows: 2,
                                 maxRows: 6,
                             }}
-                                showCount allowClear maxLength={100} placeholder="请输入投票详情（描述）" />
+                                      showCount allowClear maxLength={100} placeholder="请输入投票详情（描述）"/>
                         </label>
                         <label className='form-label w-75 m-2'>
-                            <CustomPopover id='privacyPopover' message='警告' type='warning' content='隐私度不能为空' />
-                            <CustomPopover id='privacyPopover' message='提示' type='info' content='隐私度 0 or 1' >
+                            <CustomPopover id='privacyPopover' message='警告' type='warning' content='隐私度不能为空'/>
+                            <CustomPopover id='privacyPopover' message='提示' type='info' content='隐私度 0 or 1'>
                                 {/* <input className='form-control' type='number' min="0" max="1" step="1" id='privacy' placeholder="请输入投票隐私度" required /> */}
-                                <InputNumber id='privacy' min="0" max="2" step="1" maxLength={1} addonBefore="请输入投票隐私度" />
+                                <InputNumber id='privacy' min="0" max="2" step="1" maxLength={1}
+                                             addonBefore="请输入投票隐私度"/>
                             </CustomPopover>
                         </label>
                         <label className='form-label w-75 m-2'>
-                            <CustomPopover id="uploaderCountPopover" message='警告' type='warning' content='规定的投票者数量不能为空' />
-                            <InputNumber id='uploaderCount' min="1" step="1" addonBefore="请输入规定的投票者数量" />
-                            <CustomPopover />
+                            <CustomPopover id="uploaderCountPopover" message='警告' type='warning'
+                                           content='规定的投票者数量不能为空'/>
+                            <InputNumber id='uploaderCount' min="1" step="1" addonBefore="请输入规定的投票者数量"/>
+                            <CustomPopover/>
                         </label>
                         <label className='form-label w-75 m-2' id='voteDate'>
-                            <CustomPopover id='voteDatePopover' message='警告' type='warning' content='投票日期不能为空' />
-                            <CustomDatePicker />
+                            <CustomPopover id='voteDatePopover' message='警告' type='warning'
+                                           content='投票日期不能为空'/>
+                            <CustomDatePicker/>
                         </label>
                     </div>
                     <Button type="primary" shape="round" size='large' onClick={
@@ -150,12 +150,12 @@ function VoteCreateForm() {
                                 VoteRef.current.startDate = document.getElementById('voteDate').getElementsByTagName('input')[0].value;
                                 VoteRef.current.limitDate = document.getElementById('voteDate').getElementsByTagName('input')[1].value;
                                 VoteRef.current.privacy = document.getElementById('privacy').value;
-                                console.log("投票初始化完成: " + JSON.stringify(Vote));
+                                console.log("投票初始化完成1: " + JSON.stringify(Vote));
                                 dispatch(setVote(Vote))
-                                if(VoteRef.current.privacy === "1"){
+                                if (VoteRef.current.privacy === "1") {
                                     //设置公钥数组
                                     uploadViewRef.current.toggleProfile()
-                                }else{
+                                } else {
                                     tipsViewRef.current.toggleProfile()
                                 }
                             }
@@ -172,11 +172,12 @@ function VoteCreateForm() {
                 >
                     <Dragger {...uploadProps}>
                         <p className="ant-upload-drag-icon">
-                            <InboxOutlined />
+                            <InboxOutlined/>
                         </p>
                         <p className="ant-upload-text">Click or drag file to this area to upload</p>
                         <p className="ant-upload-hint">
-                            Support for a single or bulk upload. Strictly prohibited from uploading company data or other
+                            Support for a single or bulk upload. Strictly prohibited from uploading company data or
+                            other
                             banned files.
                         </p>
                     </Dragger>
@@ -223,14 +224,16 @@ function checkInputIsNotNull(idList) {
 }
 
 
-
-const OptionsItem = () => {
+const OptionsItem = ({vote}) => {
     const isMultipleList = useRef([])
     const actionRef = useRef();
     const dispatch = useDispatch();
-    const { message } = App.useApp();
-    let initVote = useSelector(state => state.vote);
-    const [vote, setVote] = useState({});
+    const {message} = App.useApp();
+    const voteRef = useRef(vote);
+    useEffect(() => {
+        voteRef.current = vote;
+    }, [vote]);
+
     // 转换函数
     function convertDataToMap(data) {
         const resultMap = new Map();
@@ -248,6 +251,7 @@ const OptionsItem = () => {
 
         return resultMap;
     }
+
     const onFinish = async (values) => {
         console.log('Received values of form: ', values);
         // let itemListString = "";
@@ -267,20 +271,25 @@ const OptionsItem = () => {
         //     question: values,
         //     isMultiple: isMultipleList.current.join("")
         // })
-        setVote({
-            ...initVote,
+        // setVote({
+        //     ...initVote,
+        //     question: values,
+        //     isMultiple: isMultipleList.current.join("")
+        // })
+        let voteData = {
+            ...vote,
             question: values,
             isMultiple: isMultipleList.current.join("")
-        })
-        console.log("投票初始化完成: " + JSON.stringify(vote));
+        };
+        console.log("投票初始化完成: " + JSON.stringify(voteData));
         //第一遍取不到值是对的，因为方法结束后，setVote才会把数值更新
-        if (vote.question.length > 0) {
-            const voteFomat = vote;
-            let question = vote.question;
+        if (voteData.question.length > 0) {
+            const voteFomat = voteData;
+            let question = voteData.question;
             voteFomat.question = Object.fromEntries(convertDataToMap(question));
             voteFomat.creator = JSON.parse(localStorage.getItem('key')).publicKey;
             const key = JSON.parse(localStorage.getItem('link')).linkKey
-            let res = await get(process.env.BACKEND_URL+"/setVote", { vote: AESEncrypt(JSON.stringify(voteFomat), key) }).catch(err => {
+            let res = await get(process.env.BACKEND_URL + "/setVote", {vote: AESEncrypt(JSON.stringify(voteFomat), key)}).catch(err => {
                 message.error("服务器连接失败");
             })
             //如果res有code
@@ -304,9 +313,9 @@ const OptionsItem = () => {
             //         isMultiple: isMultipleList.current.join("")
             //     })
             // }}
-            onFinish={async (values) => {
-                await onFinish(values);
-            }}
+                 onFinish={async (values) => {
+                     await onFinish(values);
+                 }}
         >
             <Space
                 style={{
@@ -332,14 +341,14 @@ const OptionsItem = () => {
                 }}
                 min={1}
                 copyIconProps={false}
-                itemRender={({ listDom, action }, { index }) => (
+                itemRender={({listDom, action}, {index}) => (
                     <>
                         <ProCard
                             bordered
-                            style={{ marginBlockEnd: 8 }}
+                            style={{marginBlockEnd: 8}}
                             title={`规格${index + 1}`}
                             extra={action}
-                            bodyStyle={{ paddingBlockEnd: 0 }}
+                            bodyStyle={{paddingBlockEnd: 0}}
                         >
                             {listDom}
                         </ProCard>
@@ -353,31 +362,31 @@ const OptionsItem = () => {
                         />
                     </>
                 )}
-                creatorRecord={{ name: '', options: [{ name: '' }] }}
+                creatorRecord={{name: '', options: [{name: ''}]}}
                 initialValue={[
-                    { name: '问题', options: [{ name: '红' }, { name: '黄' }] },
+                    {name: '问题', options: [{name: '红'}, {name: '黄'}]},
                 ]}
                 actionRef={actionRef}
             >
                 <ProFormText
-                    style={{ padding: 0 }}
+                    style={{padding: 0}}
 
                     name="name"
                     label="问题名"
                 />
-                <ProForm.Item isListField style={{ marginBlockEnd: 0 }} label="选项值">
+                <ProForm.Item isListField style={{marginBlockEnd: 0}} label="选项值">
                     <ProFormList
                         name="options"
                         creatorButtonProps={{
                             creatorButtonText: '新建',
                             icon: false,
                             type: 'link',
-                            style: { width: 'unset' },
+                            style: {width: 'unset'},
                         }}
                         min={1}
                         copyIconProps={false}
-                        deleteIconProps={{ tooltipText: '删除' }}
-                        itemRender={({ listDom, action }, { index }) => (
+                        deleteIconProps={{tooltipText: '删除'}}
+                        itemRender={({listDom, action}, {index}) => (
                             <>
                                 <div
                                     style={{
@@ -385,7 +394,8 @@ const OptionsItem = () => {
                                         marginInlineEnd: 25,
                                     }}>
                                     {/* {listDom}  相当与这个组件的children*/}
-                                    <ProFormText addonBefore={["A:", "B:", "C:", "D:"][index]} allowClear={false} width="xs" name={['name']} />
+                                    <ProFormText addonBefore={["A:", "B:", "C:", "D:"][index]} allowClear={false}
+                                                 width="xs" name={['name']}/>
                                     {action}
                                 </div>
                             </>

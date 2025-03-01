@@ -9,7 +9,7 @@ import {
     SettingOutlined,
     UserOutlined
 } from '@ant-design/icons';
-import {Input, Popover, Tag} from 'antd';
+import {Dropdown, Input, Tag} from 'antd';
 import {DefaultFooter, PageContainer, ProLayout} from '@ant-design/pro-components';
 import React, {useEffect, useState} from 'react';
 import defaultProps from './_defaultProps';
@@ -28,63 +28,72 @@ const CustomProLayout = (props) => {
         "contentWidth": "Fluid",
         "fixedHeader": true
     });
-    let [userItem, setUserItem] = useState([{
-        key: 'login',
-        href: '/login',
-        icon: <LoginOutlined/>,
-        label: '登录',
-        onClick: () => {
-            window.location.href = '/login'
+    let [userItem, setUserItem] = useState([
+        {
+            key: 'login',
+            href: '/login',
+            icon: <LoginOutlined />,
+            label: '登录',
+            onClick: () => {
+                window.location.href = '/login'
+            }
         }
-    }])
+    ])
     useEffect(() => {
         if (window.localStorage.getItem('token')) {
-            setUserItem([{
-                key: 'center',
-                href: '/user',
-                icon: <UserOutlined/>,
-                label: '个人中心',
-                onClick: () => {
-                    window.location.href = '/user'
-                }
-            }, {
-                key: 'settings',
-                href: '/settings',
-                icon: <SettingOutlined/>,
-                label: '个人设置',
-                onClick: () => {
-                    window.location.href = '/settings'
-                }
-            }, {
-                key: 'change-password',
-                icon: <EditOutlined/>,
-                label: "修改密码",
-            }, {
-                key: 'divider',
-                type: 'divider',
-            }, {
-                key: 'logout',
-                href: '/logout',
-                icon: <LogoutOutlined/>,
-                label: '退出登录',
-                onClick: () => {
-                    setMessageSuccess(<LoginOut/>)
-                    //转到登录页面
-                    //删除loaclstorage
-                    window.localStorage.removeItem('token');
-                    window.localStorage.removeItem('key');
-                    dispatch(deleteAuthToken())
-                    window.location.href = '/login'
-                }
-            },]);
+            setUserItem([
+                {
+                    key: 'center',
+                    href: '/user',
+                    icon: <UserOutlined />,
+                    label: '个人中心',
+                    onClick: () => {
+                        window.location.href = '/user'
+                    }
+                },
+                {
+                    key: 'settings',
+                    href: '/settings',
+                    icon: <SettingOutlined />,
+                    label: '个人设置',
+                    onClick: () => {
+                        window.location.href = '/settings'
+                    }
+                },
+                {
+                    key: 'change-password',
+                    icon: <EditOutlined />,
+                    label: "修改密码",
+                },
+                {
+                    type: 'divider',
+                },
+                {
+                    key: 'logout',
+                    href: '/logout',
+                    icon: <LogoutOutlined />,
+                    label: '退出登录',
+                    onClick: () => {
+                        setMessageSuccess(<LoginOut />)
+                        //转到登录页面
+                        //删除loaclstorage
+                        window.localStorage.removeItem('token');
+                        window.localStorage.removeItem('key');
+                        dispatch(deleteAuthToken())
+                        window.location.href = '/login'
+
+                    }
+                },
+
+            ]);
         }
     }, [])
     const [pathname, setPathname] = useState('/');
     return (
         <div
-            id="test-pro-layout"
+            id="pro-layout"
             style={{
-                height: '100vh',
+                height: '100%',
             }}
         >
             <ProLayout
@@ -119,19 +128,20 @@ const CustomProLayout = (props) => {
                                          }}
                                     >Ctrl K</Tag>
                                 }
-                                placeholder="搜索方案"
+                                placeholder="搜索"
+                                allowClear
                             />
                         ) : undefined,
-                        <InfoCircleFilled key="InfoCircleFilled"/>,
-                        <QuestionCircleFilled key="QuestionCircleFilled"/>,
-                        <GithubFilled key="GithubFilled"/>,
+                        <InfoCircleFilled key="InfoCircleFilled" />,
+                        <QuestionCircleFilled key="QuestionCircleFilled" />,
+                        <GithubFilled key="GithubFilled" />,
                     ];
                 }}
                 footerRender={() => (
                     <DefaultFooter
                         links={[
-                            {key: 'test', title: 'layout', href: 'www.alipay.com'},
-                            {key: 'test2', title: 'layout2', href: 'www.alipay.com'},
+                            { key: 'test', title: 'layout', href: 'www.alipay.com' },
+                            { key: 'test2', title: 'layout2', href: 'www.alipay.com' },
                         ]}
                         copyright="这是一条测试文案"
                     />
@@ -168,7 +178,7 @@ const CustomProLayout = (props) => {
                 menuItemRender={(item, dom) => (
                     <a
                         href={pathname}
-                        style={{textDecoration: 'none'}}
+                        style={{ textDecoration: 'none' }}
                         onClick={() => {
                             setPathname(item.path || '/');
                         }}
@@ -177,19 +187,16 @@ const CustomProLayout = (props) => {
                     </a>
                 )}
                 avatarProps={{
-                    icon: <UserOutlined/>,
+                    icon: <UserOutlined />,
                     render: (props, dom) => {
                         return (
-                            <Popover content={<div style={{display: 'flex', flexDirection: 'column',padding:'2px 4px'}}>
-                                {userItem.map((item, index) => (
-                                    <div key={index} style={{display: 'flex'}} onClick={item.onClick}>
-                                        <div style={{marginInline:'2px 5px'}}>{item.icon}</div>
-                                        <div>{item.label}</div>
-                                    </div>
-                                ))}
-                            </div>}>
+                            <Dropdown
+                                menu={{
+                                    items: userItem
+                                }}
+                            >
                                 {dom}
-                            </Popover>
+                            </Dropdown>
                         );
                     }
                 }}
@@ -199,7 +206,7 @@ const CustomProLayout = (props) => {
                     {props.children}
                 </PageContainer>
             </ProLayout>
-            <CustomMessage type="success">{MessageSuccess}</CustomMessage>
+            <CustomMessage type="success" >{MessageSuccess}</CustomMessage>
         </div>
     );
 };
