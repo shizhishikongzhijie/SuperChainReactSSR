@@ -59,7 +59,7 @@ function Vote() {
             let data = JSON.parse(res).data.voteList;
             if (data) {
                 setVoteList(data);
-                setLoading(false);
+                // setLoading(false);
             }
         })
     }
@@ -79,8 +79,9 @@ function Vote() {
     }, [])
 
     useEffect(() => {
-        setLoading(true);
         if (activeSection === 'managing') {
+            setLoading(true);
+
             searchVoteList()
         } else {
             searchVoteByPkType()
