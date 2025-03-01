@@ -123,18 +123,18 @@ const config = {
         new MiniCssExtractPlugin({
             filename: 'styles-[chunkhash:8].css',
         }),
-        NODE_ENV === 'production' && new ReplaceInFileWebpackPlugin([
-            {
-                dir: path.resolve(__dirname, 'dist'),
-                test: /\.(js|jsx|ts|tsx)$/,
-                rules: [
-                    {
-                        search: 'http://localhost:8080',
-                        replace: 'http://www.kongzhijie.cn:8080'
-                    }
-                ]
-            }
-        ]),
+        // NODE_ENV === 'production' && new ReplaceInFileWebpackPlugin([
+        //     {
+        //         dir: path.resolve(__dirname, 'dist'),
+        //         test: /\.(js|jsx|ts|tsx)$/,
+        //         rules: [
+        //             {
+        //                 search: 'http://localhost:8080',
+        //                 replace: 'http://www.kongzhijie.cn:8080'
+        //             }
+        //         ]
+        //     }
+        // ]),
         // new webpack.HotModuleReplacementPlugin(), // HMR 插件 部署项目出现__webpack_hmr,所以需要注释
         // new WriteFilePlugin()//将文件写入磁盘
     ],
