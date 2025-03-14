@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import {hydrateRoot} from 'react-dom/client';
 // 获取需要预先存储的内容
 import Application from './App'
 // 获取服务器传递的初始数据
@@ -23,6 +23,6 @@ delete window.__VOTE_VIEW__;
 // store.dispatch(setInitialState(JSON.parse(initialData)));
 
 // 开始渲染应用
-// hydrateRoot(document.getElementById('root'), <Application initialData={initialData} isLimit={isLimit} />);
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<Application initialData={initialData} isLimit={isLimit} voteView={voteView} />);
+hydrateRoot(document.getElementById('root'), <Application initialData={initialData} isLimit={isLimit} />);
+// const root = ReactDOM.createRoot(document.getElementById('root'));
+// root.render(<Application initialData={initialData} isLimit={isLimit} voteView={voteView} />);

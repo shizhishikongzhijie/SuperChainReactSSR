@@ -16,7 +16,7 @@ const VoteViewCard = ({dataSourceItem}) => {
             const res = await get(process.env.BACKEND_URL + '/countVote', {voteId: countVoteVid}).catch(err => {
                 message.error("服务器连接失败");
             })
-            // console.log(res);
+            console.log(res);
             setCountVoteData(res.data);
         };
         if(countVoteVid!==0){

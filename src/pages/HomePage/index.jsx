@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import CustomCarousel from '../../components/Carousel/CustomCarousel';
 import HomeDataCarousel from '../../components/HomeDataCarousel/HomeDataCarousel';
-import { get } from '../../util/request';
-import { App } from 'antd';
+import {get} from '../../util/request';
+import {App} from 'antd';
 
 function Home() {
     let [dataSource, setDataSource] = useState({});
-    const { message } = App.useApp();
+    const {message} = App.useApp();
     // 使用 useCallback 确保函数不会在每次渲染时都重新创建
     const fetchHomePageDataSource = useCallback(async () => {
         if (typeof window !== 'undefined') {
-            const res = await get(`http://localhost:8080/api/getHomePage`).catch((error) => {
+            const res = await get(`${process.env.BACKEND_URL}/api/getHomePage`).catch((error) => {
                 console.error("Error fetching home page data:", error);
             });
             return res;
@@ -30,11 +30,12 @@ function Home() {
     return (
         <>
             {/* end of banner */}
-            {dataSource.carouselCard == 1 ? <CustomCarousel /> : <></>}
+            {dataSource.carouselCard === 1 ? <CustomCarousel/> : <></>}
             <HomeDataCarousel
                 ifRender={dataSource}
             />
         </>
     );
 }
+
 export default Home;
